@@ -131,7 +131,7 @@ public sealed class CodexClient : ICodexClient, IAsyncDisposable
         {
             process = await _processLauncher.StartSessionAsync(options, _clientOptions, cancellationToken).ConfigureAwait(false);
 
-            var captureTimeout = TimeSpan.FromMilliseconds(Math.Min(250, _clientOptions.StartTimeout.TotalMilliseconds / 4));
+            var captureTimeout = TimeSpan.FromSeconds(Math.Min(2, _clientOptions.StartTimeout.TotalSeconds / 4));
             var sessionIdCaptureTask = CaptureSessionIdAsync(process, captureTimeout, cancellationToken);
 
             // Locate the new session log file
@@ -436,10 +436,12 @@ public sealed class CodexClient : ICodexClient, IAsyncDisposable
 
     private async Task<SessionId?> CaptureSessionIdAsync(Process process, TimeSpan timeout, CancellationToken cancellationToken)
     {
+        // var sw = Stopwatch.StartNew();
         var tcs = new TaskCompletionSource<SessionId?>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         void Handler(object? _, DataReceivedEventArgs e)
         {
+            // Console.WriteLine($"[{sw.Elapsed}] Output: {e.Data}");
             if (string.IsNullOrWhiteSpace(e.Data))
             {
                 return;
@@ -448,6 +450,8 @@ public sealed class CodexClient : ICodexClient, IAsyncDisposable
             var match = SessionIdRegex.Match(e.Data);
             if (match.Success && SessionId.TryParse(match.Groups[1].Value, out var sessionId))
             {
+                // sw.Stop();
+                // var processExit = process.HasExited ? $" Process exited with code {process.ExitCode}." : string.Empty;
                 tcs.TrySetResult(sessionId);
             }
         }
