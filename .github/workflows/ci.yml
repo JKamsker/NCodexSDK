@@ -9,6 +9,8 @@ on:
 jobs:
   build-and-test:
     runs-on: ${{ matrix.os }}
+    outputs:
+      version: ${{ steps.set-version.outputs.version }}
     strategy:
       fail-fast: false
       matrix:
@@ -27,6 +29,13 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
 
+      - name: Compute Version
+        id: set-version
+        run: |
+          VERSION="0.0.${{ github.run_number }}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Restore
         run: dotnet restore Codex.DotNet.sln
 
@@ -35,3 +44,38 @@ jobs:
 
       - name: Test
         run: dotnet test Codex.DotNet.sln --configuration Release --no-build --framework ${{ matrix.framework }} --logger \"trx;LogFileName=test-results.trx\"
+
+      - name: Pack NuGet Package
+        if: matrix.os == 'ubuntu-latest'
+        run: dotnet pack src/Codex.DotNet/Codex.DotNet.csproj --configuration Release --no-build --output nuget-packages /p:Version="${{ env.VERSION }}"
+
+      - name: Upload NuGet Package Artifact
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-package
+          path: nuget-packages/*.nupkg
+
+  NugetUpload:
+    needs: build-and-test
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download NuGet Package
+      uses: actions/download-artifact@v4
+      with:
+        name: nuget-package
+        path: nuget-packages
+
+    - name: Get Secrets
+      uses: bitwarden/sm-action@v2
+      with:
+        access_token: ${{ secrets.BW_ACCESS_TOKEN }}
+        base_url: https://vault.bitwarden.eu
+        secrets: |
+          265b2fb6-2cf0-4859-9bc8-b24c00ab4378 > NUGET_API_KEY
+
+    - name: Upload to NuGet.org
+      run: |
+        dotnet nuget push "nuget-packages/*.nupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+        echo "Version: ${{ needs.build-and-test.outputs.version }}"
