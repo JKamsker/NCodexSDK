@@ -1,6 +1,6 @@
-# Research Findings: Codex.DotNet Implementation
+# Research Findings: NCodexSDK Implementation
 
-**Feature**: Codex.DotNet - CLI Wrapper Library  
+**Feature**: NCodexSDK - CLI Wrapper Library  
 **Date**: November 20, 2025  
 **Phase**: Phase 0 - Research & Discovery
 

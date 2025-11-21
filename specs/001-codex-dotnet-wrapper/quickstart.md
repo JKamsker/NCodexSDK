@@ -1,6 +1,6 @@
-# Quick Start Guide: Codex.DotNet
+# Quick Start Guide: NCodexSDK
 
-Get started with Codex.DotNet CLI wrapper library in minutes.
+Get started with NCodexSDK CLI wrapper library in minutes.
 
 ---
 
@@ -9,7 +9,7 @@ Get started with Codex.DotNet CLI wrapper library in minutes.
 ### NuGet Package (when published)
 
 ```bash
-dotnet add package Codex.DotNet
+dotnet add package NCodexSDK
 ```
 
 ### Build from Source
@@ -17,7 +17,7 @@ dotnet add package Codex.DotNet
 ```bash
 git clone https://github.com/yourorg/Codex-Dotnet.git
 cd Codex-Dotnet
-dotnet build src/Codex.DotNet/Codex.DotNet.csproj
+dotnet build src/NCodexSDK/NCodexSDK.csproj
 ```
 
 ---
@@ -36,8 +36,8 @@ dotnet build src/Codex.DotNet/Codex.DotNet.csproj
 
 ```csharp
 using System.Threading;
-using Codex.DotNet.Public;
-using Codex.DotNet.Public.Models;
+using NCodexSDK.Public;
+using NCodexSDK.Public.Models;
 
 // Create client with defaults (uses PATH / default sessions root)
 await using var client = new CodexClient();
@@ -84,8 +84,8 @@ await foreach (var evt in session.GetEventsAsync(EventStreamOptions.Default, Can
 
 ```csharp
 using System.Threading;
-using Codex.DotNet.Public;
-using Codex.DotNet.Public.Models;
+using NCodexSDK.Public;
+using NCodexSDK.Public.Models;
 
 await using var client = new CodexClient();
 
@@ -106,7 +106,7 @@ await foreach (var evt in session.GetEventsAsync(EventStreamOptions.Default, Can
 
 ```csharp
 using System.Threading;
-using Codex.DotNet.Public;
+using NCodexSDK.Public;
 
 await using var client = new CodexClient();
 
@@ -126,7 +126,7 @@ await foreach (var evt in session.GetEventsAsync(replayOptions, CancellationToke
 
 ```csharp
 using System.Threading;
-using Codex.DotNet.Public;
+using NCodexSDK.Public;
 
 await using var client = new CodexClient();
 
@@ -154,7 +154,7 @@ await foreach (var sessionInfo in client.ListSessionsAsync(filter, CancellationT
 ### Global Client Configuration
 
 ```csharp
-using Codex.DotNet.Public;
+using NCodexSDK.Public;
 
 var clientOptions = new CodexClientOptions
 {
@@ -179,8 +179,8 @@ await using var client = new CodexClient(clientOptions);
 
 ```csharp
 using Microsoft.Extensions.DependencyInjection;
-using Codex.DotNet.Public;
-using Codex.DotNet.Abstractions;
+using NCodexSDK.Public;
+using NCodexSDK.Abstractions;
 
 var services = new ServiceCollection();
 
@@ -267,7 +267,7 @@ Console.WriteLine($"Collected {events.Count} events");
 ### Pattern 5: Filter Events by Type
 
 ```csharp
-using Codex.DotNet.Public.Models;
+using NCodexSDK.Public.Models;
 
 await using var session = await client.StartSessionAsync(options, CancellationToken.None);
 
@@ -333,8 +333,8 @@ await foreach (var evt in session.GetEventsAsync(EventStreamOptions.Default, Can
 ### Unit Testing with Mocks
 
 ```csharp
-using Codex.DotNet.Abstractions;
-using Codex.DotNet.Public.Models;
+using NCodexSDK.Abstractions;
+using NCodexSDK.Public.Models;
 using Moq;
 using Xunit;
 

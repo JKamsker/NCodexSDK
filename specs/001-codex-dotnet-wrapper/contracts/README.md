@@ -1,4 +1,4 @@
-# Event Schemas: Codex.DotNet
+# Event Schemas: NCodexSDK
 
 This directory contains JSON schemas and examples for all Codex event types.
 

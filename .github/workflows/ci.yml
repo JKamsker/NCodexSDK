@@ -37,17 +37,17 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Restore
-        run: dotnet restore Codex.DotNet.sln
+        run: dotnet restore NCodexSDK.sln
 
       - name: Build
-        run: dotnet build Codex.DotNet.sln --configuration Release --no-restore
+        run: dotnet build NCodexSDK.sln --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test Codex.DotNet.sln --configuration Release --no-build --framework ${{ matrix.framework }} --logger \"trx;LogFileName=test-results.trx\"
+        run: dotnet test NCodexSDK.sln --configuration Release --no-build --framework ${{ matrix.framework }} --logger \"trx;LogFileName=test-results.trx\"
 
       - name: Pack NuGet Package
         if: matrix.os == 'ubuntu-latest'
-        run: dotnet pack src/Codex.DotNet/Codex.DotNet.csproj --configuration Release --no-build --output nuget-packages /p:Version="${{ env.VERSION }}"
+        run: dotnet pack src/NCodexSDK/NCodexSDK.csproj --configuration Release --no-build --output nuget-packages /p:Version="${{ env.VERSION }}"
 
       - name: Upload NuGet Package Artifact
         if: matrix.os == 'ubuntu-latest'

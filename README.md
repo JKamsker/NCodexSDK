@@ -1,4 +1,4 @@
-# <img src="res/logo.png" align="left" width="120" height="120" /> Codex .NET SDK
+# <img src="res/logo.png" align="left" width="120" height="120" /> NCodexSDK
 
 <br clear="left"/>
 
@@ -133,11 +133,11 @@ await foreach (var evt in session.GetEventsAsync())
 
 ## Demo Application
 
-A sample console application is included at `src/Codex.DotNet.Demo` to demonstrate library usage.
+A sample console application is included at `src/NCodexSDK.Demo` to demonstrate library usage.
 
 ### Running the Demo
 ```bash
-dotnet run --project src/Codex.DotNet.Demo -- "Your prompt here"
+dotnet run --project src/NCodexSDK.Demo -- "Your prompt here"
 ```
 
 The demo showcases:
@@ -171,7 +171,7 @@ Represents an active or historical session, provides event streaming, manages cl
 ## Project Structure
 
 ### Source Code
-- **`src/Codex.DotNet/`** — Core library
+- **`src/NCodexSDK/`** — Core library
   - `Public/CodexClient.cs` — Main client API
   - `Public/Models/` — Event models (`ResponseItemEvent`, `ResponseItemPayload`, etc.)
   - `Infrastructure/CodexProcessLauncher.cs` — Process management
@@ -179,11 +179,11 @@ Represents an active or historical session, provides event streaming, manages cl
   - `Infrastructure/JsonlTailer.cs` — Log file streaming
   - `Abstractions/` — Interfaces for extensibility
 
-- **`src/Codex.DotNet.Demo/`** — Sample console application
+- **`src/NCodexSDK.Demo/`** — Sample console application
   - `Program.cs` — Demonstrates rate limits, sessions, and resumption
 
 ### Tests
-- **`tests/Codex.DotNet.Tests/`**
+- **`tests/NCodexSDK.Tests/`**
   - `Unit/ResponseItemEventTests.cs` — Response item parsing tests
   - `Integration/CodexClientStartSessionTests.cs` — End-to-end session tests
   - Complete coverage for process launch, parsing, and client behavior
@@ -215,7 +215,7 @@ private static ResponseItemPayload NormalizeResponseItemPayload(JsonElement raw)
 ### Build Issues
 - **File locked during build:** Stop any running demo processes:
   ```powershell
-  Get-Process Codex.DotNet.Demo | Stop-Process -Force
+  Get-Process NCodexSDK.Demo | Stop-Process -Force
   ```
 
 ### Runtime Issues
