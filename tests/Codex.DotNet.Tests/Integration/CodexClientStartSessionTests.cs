@@ -162,32 +162,55 @@ public class CodexClientStartSessionTests
 
         public static Process CreateLongLivedProcess()
         {
-            // On Windows, use "cmd /c ping -n 30 127.0.0.1" to stay alive for a bit
-            var psi = new ProcessStartInfo
-            {
-                FileName = "cmd.exe",
-                Arguments = "/c ping -n 30 127.0.0.1 >NUL",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                RedirectStandardInput = true,
-                CreateNoWindow = true
-            };
-            var p = Process.Start(psi)!;
-            return p;
+            var isWindows = OperatingSystem.IsWindows();
+
+            // Keep the process alive for a short while so tests can interact with it
+            var psi = isWindows
+                ? new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = "/c ping -n 30 127.0.0.1 >NUL",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    RedirectStandardInput = true,
+                    CreateNoWindow = true
+                }
+                : new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = "-c \"sleep 30\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    RedirectStandardInput = true,
+                    CreateNoWindow = true
+                };
+
+            return Process.Start(psi)!;
         }
 
         public static Process CreateShortProcess()
         {
-            var psi = new ProcessStartInfo
-            {
-                FileName = "cmd.exe",
-                Arguments = "/c exit 0",
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-            var p = Process.Start(psi)!;
-            return p;
+            var isWindows = OperatingSystem.IsWindows();
+
+            var psi = isWindows
+                ? new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    Arguments = "/c exit 0",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+                : new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    Arguments = "-c \"exit 0\"",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+            return Process.Start(psi)!;
         }
     }
 
