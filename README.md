@@ -38,10 +38,9 @@ All infrastructure is swappable via interfaces:
 - .NET 10 SDK or later
 - Codex CLI ≥ 0.60.1 installed and available on PATH (`codex` / `codex.cmd`)
 
-### Build
+### Install via NuGet
 ```bash
-dotnet restore
-dotnet build
+dotnet add package NCòdexSDK
 ```
 
 ## Usage
