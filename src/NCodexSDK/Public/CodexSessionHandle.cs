@@ -24,6 +24,7 @@ public sealed class CodexSessionHandle : ICodexSessionHandle
     private readonly object _exitSync = new();
     private bool _exitSignaled;
     private int _exitCode;
+    private SessionExitReason _exitReason = SessionExitReason.Unknown;
     private List<Action<int>> _exitCallbacks = new();
     private int _idleTerminationStarted;
 
@@ -73,6 +74,9 @@ public sealed class CodexSessionHandle : ICodexSessionHandle
 
     /// <inheritdoc />
     public CodexSessionInfo Info { get; }
+
+    /// <inheritdoc />
+    public SessionExitReason ExitReason => _exitReason;
 
     /// <inheritdoc />
     public bool IsLive => !_disposed && _process is { HasExited: false };
@@ -125,6 +129,7 @@ public sealed class CodexSessionHandle : ICodexSessionHandle
         }
 
         await _process.WaitForExitAsync(cancellationToken);
+        NotifyExitSafe(_process.ExitCode, SessionExitReason.Success);
         return _process.ExitCode;
     }
 
@@ -142,7 +147,7 @@ public sealed class CodexSessionHandle : ICodexSessionHandle
         if (_process.HasExited)
         {
             // Ensure callbacks are notified if not yet
-            NotifyExitSafe(_process.ExitCode);
+            NotifyExitSafe(_process.ExitCode, SessionExitReason.Success);
             return _process.ExitCode;
         }
 
@@ -156,7 +161,7 @@ public sealed class CodexSessionHandle : ICodexSessionHandle
             .ConfigureAwait(false);
 
         // Ensure exit callbacks are fired (guarded for idempotency)
-        NotifyExitSafe(code);
+        NotifyExitSafe(code, SessionExitReason.Custom);
         return code;
     }
 
@@ -183,7 +188,7 @@ public sealed class CodexSessionHandle : ICodexSessionHandle
                             _processExitTimeout,
                             CancellationToken.None).ConfigureAwait(false);
                         // Make sure callbacks run even if Exited didn't fire for any reason
-                        NotifyExitSafe(_process.HasExited ? _process.ExitCode : -1);
+                        NotifyExitSafe(_process.HasExited ? _process.ExitCode : -1, SessionExitReason.Custom);
                     }
                     catch (Exception ex)
                     {
@@ -231,7 +236,7 @@ public sealed class CodexSessionHandle : ICodexSessionHandle
                 code = -1;
             }
 
-            NotifyExitSafe(code);
+            NotifyExitSafe(code, SessionExitReason.Success);
         }
         catch (Exception ex)
         {
@@ -239,7 +244,7 @@ public sealed class CodexSessionHandle : ICodexSessionHandle
         }
     }
 
-    private void NotifyExitSafe(int code)
+    private void NotifyExitSafe(int code, SessionExitReason reason)
     {
         List<Action<int>>? callbacksToRun = null;
         lock (_exitSync)
@@ -251,6 +256,7 @@ public sealed class CodexSessionHandle : ICodexSessionHandle
 
             _exitSignaled = true;
             _exitCode = code;
+            _exitReason = reason;
             callbacksToRun = _exitCallbacks;
             _exitCallbacks = new List<Action<int>>();
         }
@@ -470,7 +476,7 @@ public sealed class CodexSessionHandle : ICodexSessionHandle
                 .TerminateProcessAsync(_process, _processExitTimeout, CancellationToken.None)
                 .ConfigureAwait(false);
 
-            NotifyExitSafe(exitCode);
+            NotifyExitSafe(exitCode, SessionExitReason.Timeout);
         }
         catch (Exception ex)
         {

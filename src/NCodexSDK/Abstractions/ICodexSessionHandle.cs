@@ -24,6 +24,17 @@ public interface ICodexSessionHandle : IAsyncDisposable
     CodexSessionInfo Info { get; }
 
     /// <summary>
+    /// Gets the reason the Codex session exited, once known.
+    /// </summary>
+    /// <value>
+    /// <see cref="SessionExitReason.Timeout"/> when the session was terminated due to an idle timeout,
+    /// <see cref="SessionExitReason.Success"/> when the Codex process exited on its own,
+    /// or <see cref="SessionExitReason.Custom"/> when the user explicitly requested termination via <see cref="ExitAsync(CancellationToken)"/>.
+    /// Before the process exits, the value is <see cref="SessionExitReason.Unknown"/>.
+    /// </value>
+    SessionExitReason ExitReason { get; }
+
+    /// <summary>
     /// Gets a value indicating whether this is a live session with a running Codex process.
     /// </summary>
     /// <value>
