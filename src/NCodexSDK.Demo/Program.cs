@@ -1,4 +1,6 @@
 using System.Text.Json;
+using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 using NCodexSDK.Public;
 using NCodexSDK.Public.Models;
 
@@ -36,7 +38,27 @@ internal static class Program
             CodexExecutablePath = options.CodexExecutablePath
         };
 
-        await using var client = new CodexClient(clientOptions);
+        // Configure console logging to surface diagnostic timings from CodexClient (Debug level)
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddConsole()
+                .SetMinimumLevel(LogLevel.Debug)
+                // Be verbose for our libraries, keep defaults for others
+                .AddFilter("NCodexSDK.Public.CodexClient", LogLevel.Debug)
+                .AddFilter("NCodexSDK.*", LogLevel.Information)
+                
+                ;
+            
+                // .AddFilter(
+                // (string a, string b, LogLevel level) =>
+                // {
+                //         
+                //     return true;
+                // })
+        });
+
+        await using var client = new CodexClient(clientOptions, loggerFactory: loggerFactory);
 
         try
         {
@@ -54,7 +76,10 @@ internal static class Program
             };
 
             Console.WriteLine("Starting Codex session...");
+            var startSw = Stopwatch.StartNew();
             await using var session = await client.StartSessionAsync(sessionOptions, shutdownCts.Token);
+            startSw.Stop();
+            Console.WriteLine($"StartSessionAsync completed in {startSw.ElapsedMilliseconds} ms");
 
             PrintSessionInfo(session.Info);
             Console.WriteLine("\nStreaming events (press Ctrl+C to stop):\n");
