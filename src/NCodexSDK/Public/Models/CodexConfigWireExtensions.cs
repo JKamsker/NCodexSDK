@@ -6,7 +6,6 @@ public static class CodexConfigWireExtensions
 
     public static string ToMcpWireValue(this CodexSandboxMode mode) => mode.Value;
 
-    public static object ToAppServerWireValue(this CodexSandboxMode mode) =>
-        new { type = mode.Value };
+    public static string ToAppServerWireValue(this CodexSandboxMode mode) => mode.Value;
 }
 
