@@ -19,6 +19,13 @@ A strongly-typed .NET client library for interacting with the Codex CLI, enablin
 dotnet add package NCòdexSDK
 ```
 
+Optional add-ons:
+
+```bash
+dotnet add package NCòdexSDK.AppServer
+dotnet add package NCòdexSDK.McpServer
+```
+
 ## Quickstart
 
 Here is the fastest way to start a session and stream the output events.
@@ -55,6 +62,70 @@ await foreach (var evt in session.GetEventsAsync(EventStreamOptions.Default, Can
             break;
     }
 }
+```
+
+## App Server vs MCP Server
+
+Codex offers two stdio JSON-RPC modes that this repo supports:
+
+- `codex app-server`: best for **deep, event-driven integrations** (threads/turns/items + streaming deltas).
+- `codex mcp-server`: best for using Codex as an **MCP tool provider** (`tools/list`, `tools/call` for `codex` + `codex-reply`).
+
+## `codex app-server` (deep integration)
+
+```csharp
+using NCodexSDK.AppServer;
+using NCodexSDK.AppServer.Notifications;
+using NCodexSDK.Public.Models;
+
+await using var codex = await CodexAppServerClient.StartAsync(new CodexAppServerClientOptions
+{
+    DefaultClientInfo = new("my_product", "My Product", "1.0.0")
+});
+
+var thread = await codex.StartThreadAsync(new ThreadStartOptions
+{
+    Model = CodexModel.Gpt51Codex,
+    Cwd = "<repo-path>",
+    ApprovalPolicy = CodexApprovalPolicy.Never,
+    Sandbox = CodexSandboxMode.WorkspaceWrite
+});
+
+await using var turn = await codex.StartTurnAsync(thread.Id, new TurnStartOptions
+{
+    Input = [TurnInputItem.Text("Summarize this repo.")]
+});
+
+await foreach (var e in turn.Events())
+{
+    if (e is AgentMessageDeltaNotification d) Console.Write(d.Delta);
+}
+
+Console.WriteLine($"\nDone: {(await turn.Completion).Status}");
+```
+
+## `codex mcp-server` (Codex as a tool)
+
+```csharp
+using NCodexSDK.McpServer;
+using NCodexSDK.Public.Models;
+
+await using var codex = await CodexMcpServerClient.StartAsync(new CodexMcpServerClientOptions());
+
+var tools = await codex.ListToolsAsync();
+
+var run = await codex.StartSessionAsync(new CodexMcpStartOptions
+{
+    Prompt = "Run tests and summarize failures.",
+    Cwd = "<repo-path>",
+    Sandbox = CodexSandboxMode.WorkspaceWrite,
+    ApprovalPolicy = CodexApprovalPolicy.Never
+});
+
+Console.WriteLine(run.Text);
+
+var followUp = await codex.ReplyAsync(run.ThreadId, "Now propose fixes.");
+Console.WriteLine(followUp.Text);
 ```
 
 ## Common Patterns
@@ -185,6 +256,23 @@ There is also a review demo that forwards to `codex review` via the SDK:
 
 ```bash
 dotnet run --project src/NCodexSDK.Demo.Review -- --commit 9a8ff41389e6684f222fb982f50efc04b59e0d50
+```
+
+Two additional demos are included:
+
+```bash
+dotnet run --project src/NCodexSDK.AppServer.Demo -- "<repo-path>"
+dotnet run --project src/NCodexSDK.McpServer.Demo -- "<repo-path>"
+```
+
+## App-server schema generation (optional)
+
+Codex can generate version-matched JSON Schemas for `codex app-server`. This repo keeps the public API handwritten and uses schemas as an optional internal aid.
+
+Generate schemas (manual step, not part of builds):
+
+```powershell
+.\scripts\generate-appserver-json-schema.ps1 -OutDir .\schemas\app-server
 ```
 
 ## Troubleshooting

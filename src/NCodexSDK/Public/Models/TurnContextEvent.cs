@@ -19,6 +19,12 @@ public record TurnContextEvent : CodexEvent
     public string? ApprovalPolicy { get; init; }
 
     /// <summary>
+    /// Gets the parsed approval policy, if <see cref="ApprovalPolicy"/> is present and well-formed.
+    /// </summary>
+    public CodexApprovalPolicy? ParsedApprovalPolicy =>
+        CodexApprovalPolicy.TryParse(ApprovalPolicy, out var policy) ? policy : (CodexApprovalPolicy?)null;
+
+    /// <summary>
     /// Gets the sandbox policy type for the current turn.
     /// </summary>
     /// <remarks>
@@ -26,4 +32,10 @@ public record TurnContextEvent : CodexEvent
     /// Common values include "none", "strict", or other sandbox configuration identifiers.
     /// </remarks>
     public string? SandboxPolicyType { get; init; }
+
+    /// <summary>
+    /// Gets the parsed sandbox mode, if <see cref="SandboxPolicyType"/> is present and well-formed.
+    /// </summary>
+    public CodexSandboxMode? ParsedSandboxMode =>
+        CodexSandboxMode.TryParse(SandboxPolicyType, out var mode) ? mode : (CodexSandboxMode?)null;
 }

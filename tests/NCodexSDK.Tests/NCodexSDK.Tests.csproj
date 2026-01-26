@@ -25,7 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Fixtures\\appserver-notifications.jsonl" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\NCodexSDK\NCodexSDK.csproj" />
+    <ProjectReference Include="..\..\src\NCodexSDK.AppServer\NCodexSDK.AppServer.csproj" />
+    <ProjectReference Include="..\..\src\NCodexSDK.McpServer\NCodexSDK.McpServer.csproj" />
   </ItemGroup>
 
 </Project>

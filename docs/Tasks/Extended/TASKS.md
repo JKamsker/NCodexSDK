@@ -28,18 +28,18 @@ Source spec: `docs/Tasks/Extended/Spec.md`
 
 ## Milestone 4 — Unified config enums
 
-- [ ] Add `CodexApprovalPolicy` + `CodexSandboxMode` value objects and protocol converters
-- [ ] Use unified config types across exec/app-server/mcp where applicable
+- [x] Add `CodexApprovalPolicy` + `CodexSandboxMode` value objects and protocol converters
+- [x] Use unified config types across exec/app-server/mcp where applicable
 
 ## Milestone 5 — Tests
 
-- [ ] Unit tests for `JsonRpcConnection` (correlation, notifications, server requests, cancellation/shutdown, parse errors)
-- [ ] Contract tests for app-server notification mapping (JSONL fixtures)
-- [ ] Contract tests for MCP tool calls (`tools/list` + `tools/call` result parsing)
-- [ ] Optional E2E tests for app-server + MCP guarded by env vars (skip by default)
+- [x] Unit tests for `JsonRpcConnection` (correlation, notifications, server requests, cancellation/shutdown, parse errors)
+- [x] Contract tests for app-server notification mapping (JSONL fixtures)
+- [x] Contract tests for MCP tool calls (`tools/list` + `tools/call` result parsing)
+- [x] Optional E2E tests for app-server + MCP guarded by env vars (skip by default)
 
 ## Milestone 6 — Docs + schema workflow
 
-- [ ] Update `README.md` with app-server + mcp-server usage and decision guide
-- [ ] Add schema generation helper script (manual, not part of build)
-- [ ] Document generated DTO strategy (optional) and keep public API handwritten
+- [x] Update `README.md` with app-server + mcp-server usage and decision guide
+- [x] Add schema generation helper script (manual, not part of build)
+- [x] Document generated DTO strategy (optional) and keep public API handwritten

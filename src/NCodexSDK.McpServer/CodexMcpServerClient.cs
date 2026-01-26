@@ -6,6 +6,7 @@ using NCodexSDK.Infrastructure;
 using NCodexSDK.Infrastructure.JsonRpc;
 using NCodexSDK.Infrastructure.Stdio;
 using NCodexSDK.Public.Models;
+using NCodexSDK.McpServer.Internal;
 
 namespace NCodexSDK.McpServer;
 
@@ -68,32 +69,7 @@ public sealed class CodexMcpServerClient : IAsyncDisposable
     public async Task<IReadOnlyList<McpToolDescriptor>> ListToolsAsync(CancellationToken ct = default)
     {
         var result = await _rpc.SendRequestAsync("tools/list", @params: null, ct);
-
-        if (result.ValueKind != JsonValueKind.Object || !result.TryGetProperty("tools", out var toolsProp) || toolsProp.ValueKind != JsonValueKind.Array)
-        {
-            return Array.Empty<McpToolDescriptor>();
-        }
-
-        var list = new List<McpToolDescriptor>();
-        foreach (var tool in toolsProp.EnumerateArray())
-        {
-            if (tool.ValueKind != JsonValueKind.Object) continue;
-
-            var name = tool.TryGetProperty("name", out var nameProp) ? nameProp.GetString() : null;
-            if (string.IsNullOrWhiteSpace(name)) continue;
-
-            var description = tool.TryGetProperty("description", out var descProp) ? descProp.GetString() : null;
-
-            JsonElement? schema = null;
-            if (tool.TryGetProperty("inputSchema", out var schemaProp))
-            {
-                schema = schemaProp.Clone();
-            }
-
-            list.Add(new McpToolDescriptor(name!, description, schema));
-        }
-
-        return list;
+        return McpToolsListParser.Parse(result);
     }
 
     public async Task<McpToolCallResult> CallToolAsync(string toolName, object arguments, CancellationToken ct = default)
@@ -128,7 +104,8 @@ public sealed class CodexMcpServerClient : IAsyncDisposable
         };
 
         var call = await CallToolAsync("codex", args, ct);
-        return ParseCodexResult(call.Raw);
+        var parsed = CodexMcpResultParser.Parse(call.Raw);
+        return new CodexMcpSessionStartResult(parsed.ThreadId, parsed.Text, parsed.StructuredContent, parsed.Raw);
     }
 
     public async Task<CodexMcpReplyResult> ReplyAsync(string threadId, string prompt, CancellationToken ct = default)
@@ -145,8 +122,7 @@ public sealed class CodexMcpServerClient : IAsyncDisposable
         };
 
         var call = await CallToolAsync("codex-reply", args, ct);
-
-        var parsed = ParseCodexResult(call.Raw);
+        var parsed = CodexMcpResultParser.Parse(call.Raw);
         return new CodexMcpReplyResult(parsed.ThreadId, parsed.Text, parsed.StructuredContent, parsed.Raw);
     }
 
@@ -188,60 +164,6 @@ public sealed class CodexMcpServerClient : IAsyncDisposable
         }
     }
 
-    private static CodexMcpSessionStartResult ParseCodexResult(JsonElement raw)
-    {
-        var structured = TryGet(raw, "structuredContent") ?? TryGet(raw, "structured_content");
-        var content = TryGet(raw, "content");
-
-        var threadId =
-            (structured is { } s && TryGetString(s, "threadId") is { Length: > 0 } sid) ? sid :
-            (structured is { } s2 && TryGetString(s2, "conversationId") is { Length: > 0 } cid) ? cid :
-            string.Empty;
-
-        var text = TryExtractText(content, structured);
-
-        var structuredElement = structured ?? JsonDocument.Parse("{}").RootElement.Clone();
-
-        return new CodexMcpSessionStartResult(threadId, text, structuredElement, raw);
-    }
-
-    private static string? TryExtractText(JsonElement? content, JsonElement? structured)
-    {
-        // Best effort: MCP content is commonly an array of blocks with { type, text }.
-        if (content is { ValueKind: JsonValueKind.Array })
-        {
-            foreach (var item in content.Value.EnumerateArray())
-            {
-                if (item.ValueKind != JsonValueKind.Object) continue;
-
-                if (item.TryGetProperty("text", out var textProp) && textProp.ValueKind == JsonValueKind.String)
-                {
-                    return textProp.GetString();
-                }
-            }
-        }
-
-        if (structured is { } s && s.ValueKind == JsonValueKind.Object)
-        {
-            if (s.TryGetProperty("content", out var contentProp) && contentProp.ValueKind == JsonValueKind.String)
-            {
-                return contentProp.GetString();
-            }
-        }
-
-        return null;
-    }
-
-    private static JsonElement? TryGet(JsonElement obj, string propertyName) =>
-        obj.ValueKind == JsonValueKind.Object && obj.TryGetProperty(propertyName, out var prop)
-            ? prop.Clone()
-            : null;
-
-    private static string? TryGetString(JsonElement obj, string propertyName) =>
-        obj.ValueKind == JsonValueKind.Object && obj.TryGetProperty(propertyName, out var prop) && prop.ValueKind == JsonValueKind.String
-            ? prop.GetString()
-            : null;
-
     public async ValueTask DisposeAsync()
     {
         if (Interlocked.Exchange(ref _disposed, 1) != 0)
@@ -253,4 +175,3 @@ public sealed class CodexMcpServerClient : IAsyncDisposable
         await _process.DisposeAsync();
     }
 }
-

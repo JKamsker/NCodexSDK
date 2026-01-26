@@ -13,6 +13,7 @@ internal sealed class JsonRpcConnection : IAsyncDisposable
     private readonly JsonSerializerOptions _serializerOptions;
     private readonly CancellationTokenSource _disposeCts = new();
     private readonly Task _readLoop;
+    private Exception? _fault;
 
     private long _nextId;
     private readonly ConcurrentDictionary<string, TaskCompletionSource<JsonElement>> _pending = new();
@@ -51,6 +52,7 @@ internal sealed class JsonRpcConnection : IAsyncDisposable
 
     public async Task<JsonElement> SendRequestAsync(string method, object? @params, CancellationToken ct)
     {
+        ThrowIfFaulted();
         if (string.IsNullOrWhiteSpace(method))
             throw new ArgumentException("Method cannot be empty or whitespace.", nameof(method));
 
@@ -78,6 +80,7 @@ internal sealed class JsonRpcConnection : IAsyncDisposable
 
     public Task SendNotificationAsync(string method, object? @params, CancellationToken ct)
     {
+        ThrowIfFaulted();
         if (string.IsNullOrWhiteSpace(method))
             throw new ArgumentException("Method cannot be empty or whitespace.", nameof(method));
 
@@ -173,6 +176,7 @@ internal sealed class JsonRpcConnection : IAsyncDisposable
         }
         catch (Exception ex)
         {
+            _fault = ex;
             _logger.LogWarning(ex, "JSON-RPC read loop terminated with error.");
             foreach (var (_, tcs) in _pending)
             {
@@ -181,7 +185,7 @@ internal sealed class JsonRpcConnection : IAsyncDisposable
         }
         finally
         {
-            _notifications.Writer.TryComplete();
+            _notifications.Writer.TryComplete(_fault);
         }
     }
 
@@ -289,10 +293,19 @@ internal sealed class JsonRpcConnection : IAsyncDisposable
 
     private async Task WriteAsync(object payload, CancellationToken ct)
     {
+        ThrowIfFaulted();
         ct.ThrowIfCancellationRequested();
         var json = JsonSerializer.Serialize(payload, _serializerOptions);
         await _writer.WriteLineAsync(json.AsMemory(), ct);
         await _writer.FlushAsync(ct);
+    }
+
+    private void ThrowIfFaulted()
+    {
+        if (_fault is not null)
+        {
+            throw new JsonRpcProtocolException("JSON-RPC connection is faulted.", _fault);
+        }
     }
 
     private object CreateRequestObject(long id, string method, object? @params)
@@ -348,4 +361,3 @@ internal sealed class JsonRpcConnection : IAsyncDisposable
         return new JsonRpcError(code, message, data);
     }
 }
-
