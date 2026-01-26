@@ -121,7 +121,12 @@ public sealed class CodexAppServerClient : IAsyncDisposable
             },
             ct);
 
-        var threadId = ExtractId(result, "id", "threadId") ?? string.Empty;
+        var threadId = ExtractThreadId(result);
+        if (string.IsNullOrWhiteSpace(threadId))
+        {
+            throw new InvalidOperationException(
+                $"thread/start returned no thread id. Raw result: {result}");
+        }
         return new CodexThread(threadId, result);
     }
 
@@ -135,7 +140,7 @@ public sealed class CodexAppServerClient : IAsyncDisposable
             new { threadId },
             ct);
 
-        var id = ExtractId(result, "id", "threadId") ?? threadId;
+        var id = ExtractThreadId(result) ?? threadId;
         return new CodexThread(id, result);
     }
 
@@ -151,14 +156,19 @@ public sealed class CodexAppServerClient : IAsyncDisposable
             new
             {
                 threadId,
-                input = options.Input.Select(i => new { type = i.Type, content = i.Content }).ToArray(),
+                input = options.Input.Select(i => i.Wire).ToArray(),
                 model = options.Model?.Value,
                 effort = options.Effort?.Value,
                 cwd = options.Cwd
             },
             ct);
 
-        var turnId = ExtractId(result, "id", "turnId") ?? string.Empty;
+        var turnId = ExtractTurnId(result);
+        if (string.IsNullOrWhiteSpace(turnId))
+        {
+            throw new InvalidOperationException(
+                $"turn/start returned no turn id. Raw result: {result}");
+        }
 
         var handle = new CodexTurnHandle(
             threadId,
@@ -272,6 +282,96 @@ public sealed class CodexAppServerClient : IAsyncDisposable
         }
 
         return null;
+    }
+
+    private static string? ExtractThreadId(JsonElement result)
+    {
+        // Common shapes:
+        // - { "threadId": "..." }
+        // - { "id": "..." }
+        // - { "thread": { "id": "..." } }
+        // - { "thread": { "threadId": "..." } }
+        return ExtractId(result, "threadId", "id") ??
+               ExtractIdByPath(result, "thread", "threadId") ??
+               ExtractIdByPath(result, "thread", "id") ??
+               FindStringPropertyRecursive(result, propertyName: "threadId", maxDepth: 6);
+    }
+
+    private static string? ExtractTurnId(JsonElement result)
+    {
+        // Common shapes:
+        // - { "turnId": "..." }
+        // - { "id": "..." }
+        // - { "turn": { "id": "..." } }
+        // - { "turn": { "turnId": "..." } }
+        return ExtractId(result, "turnId", "id") ??
+               ExtractIdByPath(result, "turn", "turnId") ??
+               ExtractIdByPath(result, "turn", "id") ??
+               FindStringPropertyRecursive(result, propertyName: "turnId", maxDepth: 6);
+    }
+
+    private static string? ExtractIdByPath(JsonElement element, string p1, string p2)
+    {
+        if (element.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        if (!element.TryGetProperty(p1, out var child) || child.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        return ExtractId(child, p2);
+    }
+
+    private static string? FindStringPropertyRecursive(JsonElement element, string propertyName, int maxDepth)
+    {
+        if (maxDepth < 0)
+        {
+            return null;
+        }
+
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.Object:
+            {
+                if (element.TryGetProperty(propertyName, out var prop) && prop.ValueKind == JsonValueKind.String)
+                {
+                    var value = prop.GetString();
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        return value;
+                    }
+                }
+
+                foreach (var p in element.EnumerateObject())
+                {
+                    var found = FindStringPropertyRecursive(p.Value, propertyName, maxDepth - 1);
+                    if (!string.IsNullOrWhiteSpace(found))
+                    {
+                        return found;
+                    }
+                }
+
+                return null;
+            }
+            case JsonValueKind.Array:
+            {
+                foreach (var item in element.EnumerateArray())
+                {
+                    var found = FindStringPropertyRecursive(item, propertyName, maxDepth - 1);
+                    if (!string.IsNullOrWhiteSpace(found))
+                    {
+                        return found;
+                    }
+                }
+
+                return null;
+            }
+            default:
+                return null;
+        }
     }
 
     private static string? TryGetTurnId(AppServerNotification notification) =>
