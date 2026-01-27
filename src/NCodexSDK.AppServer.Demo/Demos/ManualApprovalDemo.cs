@@ -30,7 +30,7 @@ public sealed class ManualApprovalDemo : IAppServerDemo
             Model = CodexModel.Gpt51Codex,
             Cwd = workDir,
             ApprovalPolicy = CodexApprovalPolicy.OnRequest,
-            Sandbox = CodexSandboxMode.WorkspaceWrite
+            Sandbox = CodexSandboxMode.ReadOnly
         }, ct);
 
         await using var turn = await codex.StartTurnAsync(thread.Id, new TurnStartOptions
