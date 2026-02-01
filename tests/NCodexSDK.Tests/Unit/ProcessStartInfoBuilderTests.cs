@@ -58,7 +58,7 @@ public class ProcessStartInfoBuilderTests
         {
             var options = new CodexSessionOptions(workingDirectory, "follow-up")
             {
-                Model = CodexModel.Gpt51Codex,
+                Model = CodexModel.Gpt52Codex,
                 ReasoningEffort = CodexReasoningEffort.Medium
             };
             var sessionId = SessionId.Parse("session-abc");
@@ -75,7 +75,7 @@ public class ProcessStartInfoBuilderTests
                 "--cd",
                 workingDirectory,
                 "--model",
-                "gpt-5.1-codex",
+                "gpt-5.2-codex",
                 "--config",
                 "model_reasoning_effort=medium",
                 "resume",
@@ -180,7 +180,7 @@ public class ProcessStartInfoBuilderTests
         {
             var options = new CodexSessionOptions(workingDirectory, "prompt")
             {
-                Model = CodexModel.Gpt51Codex,
+                Model = CodexModel.Gpt52Codex,
                 ReasoningEffort = CodexReasoningEffort.XHigh
             };
             var clientOptions = new CodexClientOptions();

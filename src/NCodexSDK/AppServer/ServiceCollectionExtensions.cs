@@ -1,9 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
-using NCodexSDK.Abstractions;
 using NCodexSDK.Infrastructure;
-using NCodexSDK.Infrastructure.Stdio;
 
 namespace NCodexSDK.AppServer;
 
@@ -21,13 +18,10 @@ public static class ServiceCollectionExtensions
             services.Configure(configure);
         }
 
-        services.TryAddSingleton<IFileSystem, RealFileSystem>();
-        services.TryAddSingleton<ICodexPathProvider, DefaultCodexPathProvider>();
-        services.TryAddSingleton<StdioProcessFactory>();
+        services.AddCodexStdioInfrastructure();
 
         services.TryAddSingleton<ICodexAppServerClientFactory, CodexAppServerClientFactory>();
 
         return services;
     }
 }
-

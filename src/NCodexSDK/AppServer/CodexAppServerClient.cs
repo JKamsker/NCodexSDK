@@ -53,26 +53,18 @@ public sealed class CodexAppServerClient : IAsyncDisposable
         var loggerFactory = NullLoggerFactory.Instance;
         var logger = loggerFactory.CreateLogger<CodexAppServerClient>();
 
-        var fileSystem = new RealFileSystem();
-        var pathProviderLogger = loggerFactory.CreateLogger<DefaultCodexPathProvider>();
-        ICodexPathProvider pathProvider = new DefaultCodexPathProvider(fileSystem, pathProviderLogger);
-
-        var stdioFactory = new StdioProcessFactory(pathProvider, loggerFactory.CreateLogger<StdioProcessFactory>());
-
-        var process = await stdioFactory.StartAsync(
+        var stdioFactory = CodexJsonRpcBootstrap.CreateDefaultStdioFactory(loggerFactory);
+        var (process, rpc) = await CodexJsonRpcBootstrap.StartAsync(
+            stdioFactory,
+            loggerFactory,
             options.Launch,
             options.CodexExecutablePath,
             options.StartupTimeout,
             options.ShutdownTimeout,
-            ct);
-
-        var rpc = new JsonRpcConnection(
-            reader: process.Stdout,
-            writer: process.Stdin,
+            options.NotificationBufferCapacity,
+            options.SerializerOptionsOverride,
             includeJsonRpcHeader: false,
-            notificationBufferCapacity: options.NotificationBufferCapacity,
-            serializerOptions: options.SerializerOptionsOverride,
-            logger: loggerFactory.CreateLogger<JsonRpcConnection>());
+            ct);
 
         var client = new CodexAppServerClient(options, process, rpc, logger);
 

@@ -27,7 +27,7 @@ public sealed class ManualApprovalDemo : IAppServerDemo
 
         var thread = await codex.StartThreadAsync(new ThreadStartOptions
         {
-            Model = CodexModel.Gpt51Codex,
+            Model = CodexModel.Gpt52Codex,
             Cwd = workDir,
             ApprovalPolicy = CodexApprovalPolicy.OnRequest,
             Sandbox = CodexSandboxMode.ReadOnly

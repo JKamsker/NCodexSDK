@@ -51,7 +51,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          path = Path("README.md")
+          path = Path("src/NCodexSDK/README.md")
           lines = path.read_text(encoding="utf-8").splitlines()
           out = []
           for line in lines:
@@ -64,7 +64,7 @@ jobs:
             out.append(line)
 
           path.write_text("\n".join(out) + "\n", encoding="utf-8")
-          print("Rewrote README.md for NuGet packaging")
+          print(f"Rewrote {path.as_posix()} for NuGet packaging")
           PY
 
       - name: Pack NuGet Package

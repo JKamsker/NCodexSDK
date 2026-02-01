@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NCodexSDK.Infrastructure;
 using NCodexSDK.Infrastructure.JsonRpc;
 using NCodexSDK.Infrastructure.Stdio;
 
@@ -25,32 +26,20 @@ internal sealed class CodexMcpServerClientFactory : ICodexMcpServerClientFactory
     {
         var options = _options.Value;
 
-        var process = await _stdioFactory.StartAsync(
+        var (process, rpc) = await CodexJsonRpcBootstrap.StartAsync(
+            _stdioFactory,
+            _loggerFactory,
             options.Launch,
             options.CodexExecutablePath,
             options.StartupTimeout,
             options.ShutdownTimeout,
-            ct);
-
-        var rpc = new JsonRpcConnection(
-            reader: process.Stdout,
-            writer: process.Stdin,
+            options.NotificationBufferCapacity,
+            options.SerializerOptionsOverride,
             includeJsonRpcHeader: true,
-            notificationBufferCapacity: options.NotificationBufferCapacity,
-            serializerOptions: options.SerializerOptionsOverride,
-            logger: _loggerFactory.CreateLogger<JsonRpcConnection>());
+            ct);
 
         var client = new CodexMcpServerClient(options, process, rpc);
-        await client.CallAsync(
-            "initialize",
-            new
-            {
-                protocolVersion = "2025-06-18",
-                clientInfo = new { name = options.ClientInfo.Name, title = options.ClientInfo.Title, version = options.ClientInfo.Version },
-                capabilities = new { }
-            },
-            ct);
-        await rpc.SendNotificationAsync("notifications/initialized", @params: null, ct);
+        await client.InitializeAsync(ct);
 
         return client;
     }

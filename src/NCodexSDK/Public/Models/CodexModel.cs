@@ -30,7 +30,13 @@ public readonly record struct CodexModel
     /// <summary>
     /// Gets the GPT-5.2 Codex model.
     /// </summary>
-    public static CodexModel Gpt51Codex => new("gpt-5.2-codex");
+    public static CodexModel Gpt52Codex => new("gpt-5.2-codex");
+
+    /// <summary>
+    /// Gets the GPT-5.2 Codex model.
+    /// </summary>
+    [Obsolete("Use Gpt52Codex instead.")]
+    public static CodexModel Gpt51Codex => Gpt52Codex;
 
     /// <summary>
     /// Gets the GPT-5.1 Codex Max model.

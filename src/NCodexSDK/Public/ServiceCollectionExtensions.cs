@@ -31,8 +31,7 @@ public static class ServiceCollectionExtensions
             services.Configure(configure);
         }
 
-        services.TryAddSingleton<IFileSystem, RealFileSystem>();
-        services.TryAddSingleton<ICodexPathProvider, DefaultCodexPathProvider>();
+        services.AddCodexCoreInfrastructure();
         services.TryAddSingleton<IJsonlEventParser, JsonlEventParser>();
         services.TryAddSingleton<ICodexProcessLauncher, CodexProcessLauncher>();
         services.TryAddSingleton<ICodexSessionLocator, CodexSessionLocator>();

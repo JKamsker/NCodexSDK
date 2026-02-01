@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using NCodexSDK.Infrastructure;
 using NCodexSDK.Infrastructure.JsonRpc;
 using NCodexSDK.Infrastructure.Stdio;
 
@@ -25,20 +26,17 @@ internal sealed class CodexAppServerClientFactory : ICodexAppServerClientFactory
     {
         var options = _options.Value;
 
-        var process = await _stdioFactory.StartAsync(
+        var (process, rpc) = await CodexJsonRpcBootstrap.StartAsync(
+            _stdioFactory,
+            _loggerFactory,
             options.Launch,
             options.CodexExecutablePath,
             options.StartupTimeout,
             options.ShutdownTimeout,
-            ct);
-
-        var rpc = new JsonRpcConnection(
-            reader: process.Stdout,
-            writer: process.Stdin,
+            options.NotificationBufferCapacity,
+            options.SerializerOptionsOverride,
             includeJsonRpcHeader: false,
-            notificationBufferCapacity: options.NotificationBufferCapacity,
-            serializerOptions: options.SerializerOptionsOverride,
-            logger: _loggerFactory.CreateLogger<JsonRpcConnection>());
+            ct);
 
         var client = new CodexAppServerClient(
             options,

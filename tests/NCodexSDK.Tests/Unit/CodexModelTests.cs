@@ -9,13 +9,13 @@ namespace NCodexSDK.Tests.Unit;
 public class CodexModelTests
 {
     [Fact]
-    public void Default_ReturnsGpt51CodexMax()
+    public void Default_ReturnsGpt52()
     {
         // Act
         var defaultModel = CodexModel.Default;
 
         // Assert
-        defaultModel.Value.Should().Be("gpt-5.1-codex-max");
+        defaultModel.Value.Should().Be("gpt-5.2");
     }
 
     [Fact]
@@ -58,13 +58,13 @@ public class CodexModelTests
     }
 
     [Fact]
-    public void Predefined_Gpt51Codex_HasCorrectValue()
+    public void Predefined_Gpt52Codex_HasCorrectValue()
     {
         // Act
-        var model = CodexModel.Gpt51Codex;
+        var model = CodexModel.Gpt52Codex;
 
         // Assert
-        model.Value.Should().Be("gpt-5.1-codex");
+        model.Value.Should().Be("gpt-5.2-codex");
     }
 
     [Fact]
@@ -78,7 +78,7 @@ public class CodexModelTests
     }
 
     [Fact]
-    public void Predefined_Gpt51_HasCorrectValue()
+    public void Predefined_Gpt52_HasCorrectValue()
     {
         // Act
         var model = CodexModel.Gpt52;
@@ -159,7 +159,7 @@ public class CodexModelTests
     public void Equality_DifferentValue_AreNotEqual()
     {
         // Arrange
-        var model1 = CodexModel.Gpt51Codex;
+        var model1 = CodexModel.Gpt52Codex;
         var model2 = CodexModel.Gpt51CodexMini;
 
         // Assert
@@ -186,16 +186,16 @@ public class CodexModelTests
     {
         // Act
         var gpt51CodexMax = CodexModel.Gpt51CodexMax;
-        var gpt51 = CodexModel.Gpt51Codex;
+        var gpt52Codex = CodexModel.Gpt52Codex;
         var gpt51Mini = CodexModel.Gpt51CodexMini;
-        var gpt51General = CodexModel.Gpt52;
+        var gpt52General = CodexModel.Gpt52;
         var defaultModel = CodexModel.Default;
 
         // Assert
-        gpt51CodexMax.Should().Be(defaultModel);
-        gpt51CodexMax.Should().NotBe(gpt51);
-        gpt51.Should().NotBe(gpt51Mini);
-        gpt51Mini.Should().NotBe(gpt51General);
-        gpt51General.Should().NotBe(gpt51CodexMax);
+        defaultModel.Should().Be(gpt52General);
+        defaultModel.Should().NotBe(gpt52Codex);
+        defaultModel.Should().NotBe(gpt51CodexMax);
+        gpt52Codex.Should().NotBe(gpt51CodexMax);
+        gpt51Mini.Should().NotBe(gpt52General);
     }
 }

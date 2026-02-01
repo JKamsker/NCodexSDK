@@ -15,7 +15,7 @@ public sealed class StreamingDemo : IAppServerDemo
 
         var thread = await codex.StartThreadAsync(new ThreadStartOptions
         {
-            Model = CodexModel.Gpt51Codex,
+            Model = CodexModel.Gpt52Codex,
             Cwd = repoPath,
             ApprovalPolicy = CodexApprovalPolicy.Never,
             Sandbox = CodexSandboxMode.WorkspaceWrite
@@ -38,4 +38,3 @@ public sealed class StreamingDemo : IAppServerDemo
         Console.WriteLine($"\nDone: {completed.Status}");
     }
 }
-
