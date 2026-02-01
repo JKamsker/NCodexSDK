@@ -9,8 +9,8 @@ A strongly-typed .NET SDK for interacting with the **Codex CLI** as a local subp
 It supports three integration styles:
 
 - **`codex exec`**: start/resume sessions and stream the JSONL session log as typed .NET events
-- **`codex app-server`**: JSON-RPC server mode (threads/turns/items + streaming deltas + approvals)
-- **`codex mcp-server`**: MCP tool provider mode (`tools/list`, `tools/call` → `codex` / `codex-reply`)
+- **[`codex app-server`](docs/AppServer/README.md)**: JSON-RPC server mode (threads/turns/items + streaming deltas + approvals)
+- **[`codex mcp-server`](docs/McpServer/README.md)**: MCP tool provider mode (`tools/list`, `tools/call` → `codex` / `codex-reply`)
 
 `JKToolKit.CodexSDK.AppServer` and `JKToolKit.CodexSDK.McpServer` are now **part of the core `JKToolKit.CodexSDK` package** (same assembly / same install).
 
@@ -72,10 +72,10 @@ await foreach (var evt in session.GetEventsAsync(EventStreamOptions.Default, Can
 
 Codex offers two stdio JSON-RPC modes that this repo supports:
 
-- `codex app-server`: best for **deep, event-driven integrations** (threads/turns/items + streaming deltas).
-- `codex mcp-server`: best for using Codex as an **MCP tool provider** (`tools/list`, `tools/call` for `codex` + `codex-reply`).
+- [`codex app-server`](docs/AppServer/README.md): best for **deep, event-driven integrations** (threads/turns/items + streaming deltas).
+- [`codex mcp-server`](docs/McpServer/README.md): best for using Codex as an **MCP tool provider** (`tools/list`, `tools/call` for `codex` + `codex-reply`).
 
-## `codex app-server` (deep integration)
+## [`codex app-server`](docs/AppServer/README.md) (deep integration)
 
 ```csharp
 using JKToolKit.CodexSDK.AppServer;
@@ -108,7 +108,7 @@ await foreach (var e in turn.Events())
 Console.WriteLine($"\nDone: {(await turn.Completion).Status}");
 ```
 
-## `codex mcp-server` (Codex as a tool)
+## [`codex mcp-server`](docs/McpServer/README.md) (Codex as a tool)
 
 ```csharp
 using JKToolKit.CodexSDK.McpServer;
