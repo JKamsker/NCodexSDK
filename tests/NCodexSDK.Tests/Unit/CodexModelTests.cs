@@ -81,10 +81,10 @@ public class CodexModelTests
     public void Predefined_Gpt51_HasCorrectValue()
     {
         // Act
-        var model = CodexModel.Gpt51;
+        var model = CodexModel.Gpt52;
 
         // Assert
-        model.Value.Should().Be("gpt-5.1");
+        model.Value.Should().Be("gpt-5.2");
     }
 
     [Fact]
@@ -188,7 +188,7 @@ public class CodexModelTests
         var gpt51CodexMax = CodexModel.Gpt51CodexMax;
         var gpt51 = CodexModel.Gpt51Codex;
         var gpt51Mini = CodexModel.Gpt51CodexMini;
-        var gpt51General = CodexModel.Gpt51;
+        var gpt51General = CodexModel.Gpt52;
         var defaultModel = CodexModel.Default;
 
         // Assert

@@ -21,11 +21,16 @@ public readonly record struct CodexModel
 
         Value = value;
     }
+    
+    /// <summary>
+    /// Gets the default Codex model ("gpt-5.2").
+    /// </summary>
+    public static CodexModel Default => new("gpt-5.2");
 
     /// <summary>
-    /// Gets the default Codex model ("gpt-5.1-codex-max").
+    /// Gets the GPT-5.2 Codex model.
     /// </summary>
-    public static CodexModel Default => new("gpt-5.1-codex-max");
+    public static CodexModel Gpt51Codex => new("gpt-5.2-codex");
 
     /// <summary>
     /// Gets the GPT-5.1 Codex Max model.
@@ -33,19 +38,14 @@ public readonly record struct CodexModel
     public static CodexModel Gpt51CodexMax => new("gpt-5.1-codex-max");
 
     /// <summary>
-    /// Gets the GPT-5.1 Codex model.
-    /// </summary>
-    public static CodexModel Gpt51Codex => new("gpt-5.1-codex");
-
-    /// <summary>
     /// Gets the GPT-5.1 Codex Mini model.
     /// </summary>
     public static CodexModel Gpt51CodexMini => new("gpt-5.1-codex-mini");
 
     /// <summary>
-    /// Gets the GPT-5.1 general model.
+    /// Gets the GPT-5.2 general model.
     /// </summary>
-    public static CodexModel Gpt51 => new("gpt-5.1");
+    public static CodexModel Gpt52 => new("gpt-5.2");
 
     /// <summary>
     /// Creates a CodexModel from a string value.
