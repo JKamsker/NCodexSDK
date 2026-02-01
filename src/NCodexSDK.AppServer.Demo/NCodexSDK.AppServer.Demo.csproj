@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\\NCodexSDK.AppServer\\NCodexSDK.AppServer.csproj" />
+    <ProjectReference Include="..\\NCodexSDK\\NCodexSDK.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,4 +18,3 @@
   </ItemGroup>
 
 </Project>
-
