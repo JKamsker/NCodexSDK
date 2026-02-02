@@ -94,11 +94,11 @@ description: "Task breakdown for CodexSdk facade + unified DI registration"
 
 ## Phase 5 — Documentation
 
-- [ ] T050 Add `specs/002-sdk-facade/quickstart.md` with copy/paste examples for all three modes.
-- [ ] T051 Update root `README.md` to mention the new facade as the recommended entry point for new users.
-- [ ] T052 Ensure XML docs for all new public types and members.
+- [x] T050 Add `specs/002-sdk-facade/quickstart.md` with copy/paste examples for all three modes.
+- [x] T051 Update root `README.md` to mention the new facade as the recommended entry point for new users.
+- [x] T052 Ensure XML docs for all new public types and members.
 
 ## Phase 6 — Polish
 
-- [ ] T060 Verify no public API breaks (build + run unit tests).
-- [ ] T061 Verify analyzers/style (nullable annotations, argument validation, cancellation token passthrough).
+- [x] T060 Verify no public API breaks (build + run unit tests).
+- [x] T061 Verify analyzers/style (nullable annotations, argument validation, cancellation token passthrough).
