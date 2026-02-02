@@ -198,6 +198,41 @@ public class JsonlEventParserTests
         var evt = events[0].Should().BeOfType<AgentMessageEvent>().Subject;
         evt.Text.Should().Be("Hello from wrapper.");
         evt.Type.Should().Be("agent_message");
+
+        evt.RawPayload.GetProperty("type").GetString().Should().Be("event_msg");
+        evt.RawPayload.TryGetProperty("timestamp", out _).Should().BeTrue();
+        var payload = evt.RawPayload.GetProperty("payload");
+        payload.GetProperty("type").GetString().Should().Be("agent_message");
+        payload.GetProperty("message").GetString().Should().Be("Hello from wrapper.");
+    }
+
+    [Fact]
+    public async Task ParseAsync_EventMsg_WrappedAgentMessage_WithNestedPayload_UnwrapsToAgentMessageEvent()
+    {
+        var timestamp = DateTimeOffset.UtcNow;
+        var json = $@"{{
+            ""type"": ""event_msg"",
+            ""timestamp"": ""{timestamp:o}"",
+            ""payload"": {{
+                ""type"": ""agent_message"",
+                ""payload"": {{
+                    ""message"": ""Hello from nested wrapper.""
+                }}
+            }}
+        }}";
+
+        var events = await _parser.ParseAsync(AsyncEnumerable.Repeat(json, 1)).ToListAsync();
+
+        events.Should().HaveCount(1);
+        var evt = events[0].Should().BeOfType<AgentMessageEvent>().Subject;
+        evt.Text.Should().Be("Hello from nested wrapper.");
+        evt.Type.Should().Be("agent_message");
+
+        evt.RawPayload.GetProperty("type").GetString().Should().Be("event_msg");
+        evt.RawPayload.TryGetProperty("timestamp", out _).Should().BeTrue();
+        var payload = evt.RawPayload.GetProperty("payload");
+        payload.GetProperty("type").GetString().Should().Be("agent_message");
+        payload.GetProperty("payload").GetProperty("message").GetString().Should().Be("Hello from nested wrapper.");
     }
 
     [Fact]
@@ -225,6 +260,49 @@ public class JsonlEventParserTests
                             }}
                         }}
                     ]
+                }}
+            }}
+        }}";
+
+        var events = await _parser.ParseAsync(AsyncEnumerable.Repeat(json, 1)).ToListAsync();
+
+        events.Should().HaveCount(1);
+        var evt = events[0].Should().BeOfType<ExitedReviewModeEvent>().Subject;
+        evt.Type.Should().Be("exited_review_mode");
+        evt.ReviewOutput.OverallCorrectness.Should().Be("good");
+        evt.ReviewOutput.OverallConfidenceScore.Should().Be(0.9);
+        evt.ReviewOutput.Findings.Should().HaveCount(1);
+        evt.ReviewOutput.Findings[0].CodeLocation!.AbsoluteFilePath.Should().Be("/tmp/file.cs");
+        evt.ReviewOutput.Findings[0].CodeLocation!.LineRange!.Start.Should().Be(10);
+    }
+
+    [Fact]
+    public async Task ParseAsync_EventMsg_ExitedReviewMode_WithNestedPayload_ParsesStructuredReviewOutput()
+    {
+        var timestamp = DateTimeOffset.UtcNow;
+        var json = $@"{{
+            ""type"": ""event_msg"",
+            ""timestamp"": ""{timestamp:o}"",
+            ""payload"": {{
+                ""type"": ""exited_review_mode"",
+                ""payload"": {{
+                    ""review_output"": {{
+                        ""overall_correctness"": ""good"",
+                        ""overall_explanation"": ""Looks fine."",
+                        ""overall_confidence_score"": 0.9,
+                        ""findings"": [
+                            {{
+                                ""priority"": 1,
+                                ""confidence_score"": 0.8,
+                                ""title"": ""Issue title"",
+                                ""body"": ""Issue body"",
+                                ""code_location"": {{
+                                    ""absolute_file_path"": ""/tmp/file.cs"",
+                                    ""line_range"": {{ ""start"": 10, ""end"": 12 }}
+                                }}
+                            }}
+                        ]
+                    }}
                 }}
             }}
         }}";

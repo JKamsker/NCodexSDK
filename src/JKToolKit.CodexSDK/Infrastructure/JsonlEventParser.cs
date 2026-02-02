@@ -163,13 +163,25 @@ public sealed class JsonlEventParser : IJsonlEventParser
             return ParseUnknownEvent(timestamp, "event_msg", rawPayload);
         }
 
-        // Treat the envelope as transparent: surface the inner type, while retaining the full raw payload.
+        // Codex can emit event_msg payloads in two shapes:
+        // 1) { type, payload: { ... } }  (nested payload)
+        // 2) { type, ... }              (payload fields at this level)
+        //
+        // Downstream parsers expect the event root to contain a "payload" object.
+        var eventRoot = payload.TryGetProperty("payload", out var innerPayload) && innerPayload.ValueKind == JsonValueKind.Object
+            ? payload
+            : root;
+
+        // Preserve the original JSONL record for debugging/inspection fidelity.
+        // rawPayload is already a clone of the full line (see ParseLine).
+        var eventRawPayload = rawPayload;
+
         return innerType switch
         {
-            "agent_message" => ParseAgentMessageEvent(root, timestamp, innerType, rawPayload),
-            "agent_reasoning" => ParseAgentReasoningEvent(root, timestamp, innerType, rawPayload),
-            "exited_review_mode" => ParseExitedReviewModeEvent(root, timestamp, innerType, rawPayload),
-            _ => ParseUnknownEvent(timestamp, innerType, rawPayload)
+            "agent_message" => ParseAgentMessageEvent(eventRoot, timestamp, innerType, eventRawPayload),
+            "agent_reasoning" => ParseAgentReasoningEvent(eventRoot, timestamp, innerType, eventRawPayload),
+            "exited_review_mode" => ParseExitedReviewModeEvent(eventRoot, timestamp, innerType, eventRawPayload),
+            _ => ParseUnknownEvent(timestamp, innerType, eventRawPayload)
         };
     }
 
