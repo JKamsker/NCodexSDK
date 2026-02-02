@@ -141,7 +141,40 @@ public sealed class CodexClient : ICodexClient, IAsyncDisposable
             throw;
         }
 
-        return new CodexReviewResult(process.ExitCode, stdoutCapture.ToString().TrimEnd(), stderrCapture.ToString().TrimEnd());
+        var stdoutText = stdoutCapture.ToString().TrimEnd();
+        var stderrText = stderrCapture.ToString().TrimEnd();
+
+        SessionId? sessionId = null;
+        if (SessionIdRegex.Match(stdoutText) is { Success: true } stdoutMatch &&
+            SessionId.TryParse(stdoutMatch.Groups[1].Value, out var stdoutId))
+        {
+            sessionId = stdoutId;
+        }
+        else if (SessionIdRegex.Match(stderrText) is { Success: true } stderrMatch &&
+                 SessionId.TryParse(stderrMatch.Groups[1].Value, out var stderrId))
+        {
+            sessionId = stderrId;
+        }
+
+        string? logPath = null;
+        if (sessionId is { } sid)
+        {
+            try
+            {
+                var sessionsRoot = _pathProvider.GetSessionsRootDirectory(_clientOptions.SessionsRootDirectory);
+                logPath = await _sessionLocator.FindSessionLogAsync(sid, sessionsRoot, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex, "Failed to resolve session log path for review session id {SessionId}", sid);
+            }
+        }
+
+        return new CodexReviewResult(process.ExitCode, stdoutText, stderrText)
+        {
+            SessionId = sessionId,
+            LogPath = logPath
+        };
     }
 
     private static async Task PumpStreamAsync(
@@ -653,5 +686,5 @@ public sealed class CodexClient : ICodexClient, IAsyncDisposable
         return null;
     }
 
-    private static readonly Regex SessionIdRegex = new(@"session id:\s*([0-9a-fA-F\-]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex SessionIdRegex = new(@"session id\s*[:=]\s*([0-9a-fA-F\-]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 }
