@@ -66,7 +66,7 @@ description: "Task breakdown for CodexSdk facade + unified DI registration"
 
 ## Phase 3 — Unified DI registration
 
-- [ ] T030 Add `services.AddCodexSdk(...)`.
+- [x] T030 Add `services.AddCodexSdk(...)`.
   - File: `src/JKToolKit.CodexSDK/ServiceCollectionExtensions.cs` (namespace `JKToolKit.CodexSDK`).
   - Implementation:
     - Calls existing `AddCodexClient`, `AddCodexAppServerClient`, `AddCodexMcpServerClient`.
