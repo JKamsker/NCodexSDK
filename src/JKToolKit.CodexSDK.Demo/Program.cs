@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using JKToolKit.CodexSDK;
 using JKToolKit.CodexSDK.Public;
 using JKToolKit.CodexSDK.Public.Models;
 
@@ -32,12 +33,6 @@ internal static class Program
             shutdownCts.Cancel();
         };
 
-        var clientOptions = new CodexClientOptions
-        {
-            SessionsRootDirectory = options.SessionsRoot,
-            CodexExecutablePath = options.CodexExecutablePath
-        };
-
         // Configure console logging to surface diagnostic timings from CodexClient (Debug level)
         using var loggerFactory = LoggerFactory.Create(builder =>
         {
@@ -58,16 +53,23 @@ internal static class Program
                 // })
         });
 
-        await using var client = new CodexClient(clientOptions, loggerFactory: loggerFactory);
+        await using var sdk = CodexSdk.Create(builder =>
+        {
+            builder.CodexExecutablePath = options.CodexExecutablePath;
+            builder.UseLoggerFactory(loggerFactory);
+            builder.ConfigureExec(o => o.SessionsRootDirectory = options.SessionsRoot);
+        });
+
+        var exec = sdk.Exec;
 
         try
         {
             // Show latest cached rate limits (if any)
-            await ShowRateLimitsAsync(client, noCache: false, shutdownCts.Token);
+            await ShowRateLimitsAsync(exec, noCache: false, shutdownCts.Token);
 
             // Refresh rate limits by sending a tiny "hi" in a throwaway session
-            await RefreshRateLimitsAsync(client, options, shutdownCts.Token);
-            await ShowRateLimitsAsync(client, noCache: true, shutdownCts.Token);
+            await RefreshRateLimitsAsync(exec, options, shutdownCts.Token);
+            await ShowRateLimitsAsync(exec, noCache: true, shutdownCts.Token);
 
             var sessionOptions = new CodexSessionOptions(options.WorkingDirectory, options.Prompt)
             {
@@ -77,7 +79,7 @@ internal static class Program
 
             Console.WriteLine("Starting Codex session...");
             var startSw = Stopwatch.StartNew();
-            await using var session = await client.StartSessionAsync(sessionOptions, shutdownCts.Token);
+            await using var session = await exec.StartSessionAsync(sessionOptions, shutdownCts.Token);
             startSw.Stop();
             Console.WriteLine($"StartSessionAsync completed in {startSw.ElapsedMilliseconds} ms");
 
@@ -101,7 +103,7 @@ internal static class Program
             Console.WriteLine("\nResuming the session with follow-up: \"how are you\" ...\n");
             var followUpOptions = sessionOptions.Clone();
             followUpOptions.Prompt = "how are you";
-            await using var resumed = await client.ResumeSessionAsync(session.Info.Id, followUpOptions, shutdownCts.Token);
+            await using var resumed = await exec.ResumeSessionAsync(session.Info.Id, followUpOptions, shutdownCts.Token);
 
             await foreach (var evt in resumed.GetEventsAsync(EventStreamOptions.Default with { Follow = true }, shutdownCts.Token))
             {
@@ -124,9 +126,9 @@ internal static class Program
         }
     }
 
-    private static async Task ShowRateLimitsAsync(CodexClient client, bool noCache, CancellationToken ct)
+    private static async Task ShowRateLimitsAsync(CodexExecFacade exec, bool noCache, CancellationToken ct)
     {
-        var limits = await client.GetRateLimitsAsync(noCache, ct);
+        var limits = await exec.GetRateLimitsAsync(noCache, ct);
         if (limits is null)
         {
             Console.WriteLine(noCache
@@ -149,7 +151,7 @@ internal static class Program
         Console.WriteLine($"Rate limits (noCache={noCache}): primary [{primary}], secondary [{secondary}], credits [{credits}]");
     }
 
-    private static async Task RefreshRateLimitsAsync(CodexClient client, CliOptions options, CancellationToken ct)
+    private static async Task RefreshRateLimitsAsync(CodexExecFacade exec, CliOptions options, CancellationToken ct)
     {
         var refreshOpts = new CodexSessionOptions(options.WorkingDirectory, "hi")
         {
@@ -158,7 +160,7 @@ internal static class Program
             AdditionalOptions = Array.Empty<string>()
         };
 
-        await using var session = await client.StartSessionAsync(refreshOpts, ct);
+        await using var session = await exec.StartSessionAsync(refreshOpts, ct);
         await foreach (var _ in session.GetEventsAsync(EventStreamOptions.Default with { Follow = false }, ct))
         {
             // drain events; rate limits will be updated in logs

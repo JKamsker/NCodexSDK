@@ -1,4 +1,5 @@
 using JKToolKit.CodexSDK.Public;
+using JKToolKit.CodexSDK;
 
 namespace JKToolKit.CodexSDK.Demo.Review;
 
@@ -29,12 +30,10 @@ internal static class Program
             shutdownCts.Cancel();
         };
 
-        var clientOptions = new CodexClientOptions
+        await using var sdk = CodexSdk.Create(builder =>
         {
-            CodexExecutablePath = options.CodexExecutablePath
-        };
-
-        await using var client = new CodexClient(clientOptions);
+            builder.CodexExecutablePath = options.CodexExecutablePath;
+        });
 
         try
         {
@@ -49,7 +48,16 @@ internal static class Program
                 AdditionalOptions = options.AdditionalOptions
             };
 
-            var result = await client.ReviewAsync(reviewOptions, Console.Out, Console.Error, shutdownCts.Token);
+            var result = await sdk.Exec.ReviewAsync(reviewOptions, shutdownCts.Token);
+            if (!string.IsNullOrEmpty(result.StandardOutput))
+            {
+                Console.Out.Write(result.StandardOutput);
+            }
+
+            if (!string.IsNullOrEmpty(result.StandardError))
+            {
+                Console.Error.Write(result.StandardError);
+            }
 
             return result.ExitCode;
         }

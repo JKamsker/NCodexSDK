@@ -1,3 +1,4 @@
+using JKToolKit.CodexSDK;
 using JKToolKit.CodexSDK.AppServer;
 using JKToolKit.CodexSDK.AppServer.Notifications;
 using JKToolKit.CodexSDK.Public.Models;
@@ -8,10 +9,11 @@ public sealed class StreamingDemo : IAppServerDemo
 {
     public async Task RunAsync(string repoPath, CancellationToken ct)
     {
-        await using var codex = await CodexAppServerClient.StartAsync(new CodexAppServerClientOptions
-        {
-            DefaultClientInfo = new("ncodexsdk-demo", "JKToolKit.CodexSDK AppServer Demo", "1.0.0"),
-        }, ct);
+        await using var sdk = CodexSdk.Create(builder =>
+            builder.ConfigureAppServer(o =>
+                o.DefaultClientInfo = new("ncodexsdk-demo", "JKToolKit.CodexSDK AppServer Demo", "1.0.0")));
+
+        await using var codex = await sdk.AppServer.StartAsync(ct);
 
         var thread = await codex.StartThreadAsync(new ThreadStartOptions
         {

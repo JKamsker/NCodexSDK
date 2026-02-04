@@ -1,3 +1,4 @@
+using JKToolKit.CodexSDK;
 using JKToolKit.CodexSDK.McpServer;
 using JKToolKit.CodexSDK.Public.Models;
 
@@ -10,7 +11,8 @@ Console.CancelKeyPress += (_, e) =>
     cts.Cancel();
 };
 
-await using var codex = await CodexMcpServerClient.StartAsync(new CodexMcpServerClientOptions(), cts.Token);
+await using var sdk = CodexSdk.Create();
+await using var codex = await sdk.McpServer.StartAsync(cts.Token);
 
 var tools = await codex.ListToolsAsync(cts.Token);
 Console.WriteLine("Tools:");
