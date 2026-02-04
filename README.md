@@ -168,10 +168,18 @@ Console.WriteLine(followUp.Text);
 Demos (console apps):
 
 ```bash
+# Exec demo (default command)
 dotnet run --project src/JKToolKit.CodexSDK.Demo -- "Your prompt here"
-dotnet run --project src/JKToolKit.CodexSDK.Demo.Review -- --commit <sha>
-dotnet run --project src/JKToolKit.CodexSDK.AppServer.Demo -- "<repo-path>"
-dotnet run --project src/JKToolKit.CodexSDK.McpServer.Demo -- "<repo-path>"
+
+# Review demo
+dotnet run --project src/JKToolKit.CodexSDK.Demo -- review --commit <sha>
+
+# AppServer demos
+dotnet run --project src/JKToolKit.CodexSDK.Demo -- appserver-stream --repo "<repo-path>"
+dotnet run --project src/JKToolKit.CodexSDK.Demo -- appserver-approval --timeout-seconds 30
+
+# McpServer demo
+dotnet run --project src/JKToolKit.CodexSDK.Demo -- mcpserver --repo "<repo-path>"
 ```
 
 ## Documentation
