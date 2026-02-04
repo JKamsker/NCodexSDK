@@ -79,7 +79,7 @@ dotnet add package JKToolKit.CodexSDK
 
 ```csharp
 using JKToolKit.CodexSDK.McpServer;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Models;
 
 await using var codex = await CodexMcpServerClient.StartAsync(new CodexMcpServerClientOptions());
 

@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using JKToolKit.CodexSDK.Infrastructure;
 using JKToolKit.CodexSDK.Infrastructure.JsonRpc;
 using JKToolKit.CodexSDK.Infrastructure.Stdio;
-using JKToolKit.CodexSDK.Public;
+using JKToolKit.CodexSDK.Exec;
 
 namespace JKToolKit.CodexSDK.McpServer;
 

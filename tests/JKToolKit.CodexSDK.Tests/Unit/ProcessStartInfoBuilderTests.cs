@@ -1,7 +1,7 @@
 using JKToolKit.CodexSDK.Abstractions;
 using JKToolKit.CodexSDK.Infrastructure;
-using JKToolKit.CodexSDK.Public;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Exec;
+using JKToolKit.CodexSDK.Models;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;

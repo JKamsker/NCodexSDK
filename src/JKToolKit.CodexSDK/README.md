@@ -62,10 +62,10 @@ For a resumed session:
 
 ## Key Types
 
-- `JKToolKit.CodexSDK.Public.CodexClient`: main entry point
-- `JKToolKit.CodexSDK.Public.CodexSessionHandle`: a live or historical session handle (`IAsyncDisposable`)
-- `JKToolKit.CodexSDK.Public.EventStreamOptions`: controls event filtering/stream options
-- `JKToolKit.CodexSDK.Public.Models.*`: strongly-typed event models (`SessionMetaEvent`, `ResponseItemEvent`, …)
+- `JKToolKit.CodexSDK.Exec.CodexClient`: main entry point
+- `JKToolKit.CodexSDK.Exec.CodexSessionHandle`: a live or historical session handle (`IAsyncDisposable`)
+- `JKToolKit.CodexSDK.Exec.EventStreamOptions`: controls event filtering/stream options
+- `JKToolKit.CodexSDK.Models.*`: strongly-typed event models (`SessionMetaEvent`, `ResponseItemEvent`, …)
 
 ## Getting Started
 
@@ -77,8 +77,8 @@ For a resumed session:
 ### Start a session and stream events
 
 ```csharp
-using JKToolKit.CodexSDK.Public;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Exec;
+using JKToolKit.CodexSDK.Models;
 
 await using var client = new CodexClient(new CodexClientOptions());
 

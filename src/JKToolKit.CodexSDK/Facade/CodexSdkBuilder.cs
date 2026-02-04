@@ -1,7 +1,7 @@
 using JKToolKit.CodexSDK.AppServer;
 using JKToolKit.CodexSDK.Infrastructure;
 using JKToolKit.CodexSDK.McpServer;
-using JKToolKit.CodexSDK.Public;
+using JKToolKit.CodexSDK.Exec;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;

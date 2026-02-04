@@ -1,5 +1,5 @@
 using JKToolKit.CodexSDK;
-using JKToolKit.CodexSDK.Public;
+using JKToolKit.CodexSDK.Exec;
 using Spectre.Console.Cli;
 
 namespace JKToolKit.CodexSDK.Demo.Commands.Review;

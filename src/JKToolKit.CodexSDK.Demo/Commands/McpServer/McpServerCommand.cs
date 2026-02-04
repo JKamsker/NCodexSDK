@@ -1,6 +1,6 @@
 using JKToolKit.CodexSDK;
 using JKToolKit.CodexSDK.McpServer;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Models;
 using Spectre.Console.Cli;
 
 namespace JKToolKit.CodexSDK.Demo.Commands.McpServer;

@@ -1,7 +1,7 @@
 using JKToolKit.CodexSDK;
 using JKToolKit.CodexSDK.AppServer;
 using JKToolKit.CodexSDK.AppServer.Notifications;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Models;
 using Spectre.Console.Cli;
 
 namespace JKToolKit.CodexSDK.Demo.Commands.AppServerStream;

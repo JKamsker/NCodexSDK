@@ -7,7 +7,7 @@
 
 Add a small, additive facade layer that provides a single, discoverable entry point (`CodexSdk`) for the three supported Codex integration modes:
 
-- `sdk.Exec` → wraps `JKToolKit.CodexSDK.Public.CodexClient`
+- `sdk.Exec` → wraps `JKToolKit.CodexSDK.Exec.CodexClient`
 - `sdk.AppServer` → starts `JKToolKit.CodexSDK.AppServer.CodexAppServerClient`
 - `sdk.McpServer` → starts `JKToolKit.CodexSDK.McpServer.CodexMcpServerClient`
 

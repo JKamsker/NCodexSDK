@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Models;
 
 namespace JKToolKit.CodexSDK.Tests.TestHelpers;
 

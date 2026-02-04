@@ -1,5 +1,5 @@
 using System.Text.Json;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Models;
 
 namespace JKToolKit.CodexSDK.Tests.TestHelpers;
 

@@ -10,8 +10,8 @@ This quickstart shows the intended "nice facade" usage once `CodexSdk` is implem
 
 ```csharp
 using JKToolKit.CodexSDK;
-using JKToolKit.CodexSDK.Public;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Exec;
+using JKToolKit.CodexSDK.Models;
 
 await using var sdk = CodexSdk.Create(b =>
 {
@@ -56,7 +56,7 @@ await using var mcp = await sdk.McpServer.StartAsync();
 
 ```csharp
 using JKToolKit.CodexSDK;
-using JKToolKit.CodexSDK.Public;
+using JKToolKit.CodexSDK.Exec;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();

@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using JKToolKit.CodexSDK;
-using JKToolKit.CodexSDK.Public;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Exec;
+using JKToolKit.CodexSDK.Models;
 using Microsoft.Extensions.Logging;
 using Spectre.Console.Cli;
 
@@ -47,7 +47,7 @@ public sealed class ExecCommand : AsyncCommand<ExecSettings>
             builder
                 .AddConsole()
                 .SetMinimumLevel(LogLevel.Debug)
-                .AddFilter("JKToolKit.CodexSDK.Public.CodexClient", LogLevel.Debug)
+                .AddFilter("JKToolKit.CodexSDK.Exec.CodexClient", LogLevel.Debug)
                 .AddFilter("JKToolKit.CodexSDK.*", LogLevel.Information);
         });
 

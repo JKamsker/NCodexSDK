@@ -1,6 +1,6 @@
 using JKToolKit.CodexSDK.Abstractions;
-using JKToolKit.CodexSDK.Public;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Exec;
+using JKToolKit.CodexSDK.Models;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -89,4 +89,3 @@ public sealed class CodexHomeDirectoryTests
         }
     }
 }
-

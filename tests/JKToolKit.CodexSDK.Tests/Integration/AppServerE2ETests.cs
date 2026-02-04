@@ -1,5 +1,5 @@
 using JKToolKit.CodexSDK.AppServer;
-using JKToolKit.CodexSDK.Public;
+using JKToolKit.CodexSDK.Exec;
 using JKToolKit.CodexSDK.Tests.TestHelpers;
 
 namespace JKToolKit.CodexSDK.Tests.Integration;

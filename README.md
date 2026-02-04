@@ -37,8 +37,8 @@ Use a single, discoverable entry point that exposes all three modes via `sdk.Exe
 
 ```csharp
 using JKToolKit.CodexSDK;
-using JKToolKit.CodexSDK.Public;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Exec;
+using JKToolKit.CodexSDK.Models;
 
 await using var sdk = CodexSdk.Create();
 
@@ -65,8 +65,8 @@ await using var mcp = await sdk.McpServer.StartAsync();
 Fastest way to start a session and stream events:
 
 ```csharp
-using JKToolKit.CodexSDK.Public;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Exec;
+using JKToolKit.CodexSDK.Models;
 
 var clientOptions = new CodexClientOptions();
 await using var client = new CodexClient(clientOptions);
@@ -111,7 +111,7 @@ Codex offers two stdio JSON-RPC modes that this repo supports:
 ```csharp
 using JKToolKit.CodexSDK.AppServer;
 using JKToolKit.CodexSDK.AppServer.Notifications;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Models;
 
 await using var codex = await CodexAppServerClient.StartAsync(new CodexAppServerClientOptions
 {
@@ -143,7 +143,7 @@ Console.WriteLine($"\nDone: {(await turn.Completion).Status}");
 
 ```csharp
 using JKToolKit.CodexSDK.McpServer;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Models;
 
 await using var codex = await CodexMcpServerClient.StartAsync(new CodexMcpServerClientOptions());
 

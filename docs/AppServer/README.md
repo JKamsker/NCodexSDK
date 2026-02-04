@@ -90,7 +90,7 @@ dotnet add package JKToolKit.CodexSDK
 ```csharp
 using JKToolKit.CodexSDK.AppServer;
 using JKToolKit.CodexSDK.AppServer.Notifications;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Models;
 
 await using var codex = await CodexAppServerClient.StartAsync(new CodexAppServerClientOptions
 {

@@ -9,7 +9,7 @@
 
 Today the SDK exposes three entry points that are each correct, but easy to miss or mix up:
 
-- **`codex exec`** → `JKToolKit.CodexSDK.Public.CodexClient`
+- **`codex exec`** → `JKToolKit.CodexSDK.Exec.CodexClient`
 - **`codex app-server`** → `JKToolKit.CodexSDK.AppServer.CodexAppServerClient` (+ `ICodexAppServerClientFactory` for DI)
 - **`codex mcp-server`** → `JKToolKit.CodexSDK.McpServer.CodexMcpServerClient` (+ `ICodexMcpServerClientFactory` for DI)
 
@@ -161,8 +161,8 @@ public sealed class CodexMcpServerFacade
 
 ```csharp
 using JKToolKit.CodexSDK;
-using JKToolKit.CodexSDK.Public;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Exec;
+using JKToolKit.CodexSDK.Models;
 
 await using var sdk = CodexSdk.Create(b =>
 {

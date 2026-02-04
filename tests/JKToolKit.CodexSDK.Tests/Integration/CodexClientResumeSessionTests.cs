@@ -1,8 +1,8 @@
 using System.Runtime.CompilerServices;
 using JKToolKit.CodexSDK.Abstractions;
 using JKToolKit.CodexSDK.Infrastructure;
-using JKToolKit.CodexSDK.Public;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Exec;
+using JKToolKit.CodexSDK.Models;
 using JKToolKit.CodexSDK.Tests.TestHelpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;

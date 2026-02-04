@@ -1,5 +1,5 @@
 using JKToolKit.CodexSDK.Infrastructure;
-using JKToolKit.CodexSDK.Public.Models;
+using JKToolKit.CodexSDK.Models;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Text.Json;
