@@ -3,32 +3,115 @@ using System.Text.Json;
 namespace JKToolKit.CodexSDK.Models;
 
 /// <summary>
-/// Normalized fields extracted from a response_item payload.
-/// Additional optional fields enable easy extension as Codex adds payload types.
+/// Base type for all <c>response_item</c> payloads emitted by Codex.
 /// </summary>
-public sealed record ResponseItemPayload
+public abstract record ResponseItemPayload
 {
-    /// <summary>Payload type string, e.g., reasoning, message, function_call.</summary>
+    /// <summary>
+    /// Gets the payload discriminator (e.g. <c>message</c>, <c>reasoning</c>, <c>function_call</c>).
+    /// </summary>
     public required string PayloadType { get; init; }
-
-    /// <summary>Raw payload JSON for forward compatibility.</summary>
-    public required JsonElement Raw { get; init; }
-
-    /// <summary>Reasoning summary texts (if payload_type == reasoning).</summary>
-    public IReadOnlyList<string>? SummaryTexts { get; init; }
-
-    /// <summary>Assistant/user role for message payloads.</summary>
-    public string? MessageRole { get; init; }
-
-    /// <summary>Flattened text segments for message payloads.</summary>
-    public IReadOnlyList<string>? MessageTextParts { get; init; }
-
-    /// <summary>Function call information when payload_type == function_call.</summary>
-    public FunctionCallInfo? FunctionCall { get; init; }
-
-    /// <summary>Ghost snapshot commit id when payload_type == ghost_snapshot.</summary>
-    public string? GhostCommitId { get; init; }
 }
 
-/// <summary>Represents a function_call payload body.</summary>
-public sealed record FunctionCallInfo(string? Name, string? ArgumentsJson, string? CallId);
+public sealed record ReasoningResponseItemPayload : ResponseItemPayload
+{
+    public required IReadOnlyList<string> SummaryTexts { get; init; }
+    public string? EncryptedContent { get; init; }
+}
+
+public sealed record MessageResponseItemPayload : ResponseItemPayload
+{
+    public string? Role { get; init; }
+    public required IReadOnlyList<ResponseMessageContentPart> Content { get; init; }
+
+    public IReadOnlyList<string> TextParts =>
+        Content.OfType<ResponseMessageTextContentPart>()
+            .Select(p => p.Text)
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .ToArray();
+}
+
+public sealed record FunctionCallResponseItemPayload : ResponseItemPayload
+{
+    public string? Name { get; init; }
+    public string? ArgumentsJson { get; init; }
+    public string? CallId { get; init; }
+}
+
+public sealed record FunctionCallOutputResponseItemPayload : ResponseItemPayload
+{
+    public string? CallId { get; init; }
+    public string? Output { get; init; }
+}
+
+public sealed record CustomToolCallResponseItemPayload : ResponseItemPayload
+{
+    public string? Status { get; init; }
+    public string? CallId { get; init; }
+    public string? Name { get; init; }
+    public string? Input { get; init; }
+}
+
+public sealed record CustomToolCallOutputResponseItemPayload : ResponseItemPayload
+{
+    public string? CallId { get; init; }
+    public string? Output { get; init; }
+}
+
+public sealed record WebSearchCallResponseItemPayload : ResponseItemPayload
+{
+    public string? Status { get; init; }
+    public WebSearchAction? Action { get; init; }
+}
+
+public sealed record WebSearchAction(string? Type, string? Query, IReadOnlyList<string>? Queries);
+
+public sealed record GhostSnapshotResponseItemPayload : ResponseItemPayload
+{
+    public GhostCommit? GhostCommit { get; init; }
+}
+
+public sealed record CompactionResponseItemPayload : ResponseItemPayload
+{
+    public string? EncryptedContent { get; init; }
+}
+
+public sealed record GhostCommit(
+    string? Id,
+    string? Parent,
+    IReadOnlyList<string>? PreexistingUntrackedFiles,
+    IReadOnlyList<string>? PreexistingUntrackedDirs);
+
+/// <summary>
+/// Forward-compat fallback for unknown payload types.
+/// Smoke tests should ensure this isn't used for known Codex CLI versions.
+/// </summary>
+public sealed record UnknownResponseItemPayload : ResponseItemPayload
+{
+    public required JsonElement Raw { get; init; }
+}
+
+/// <summary>Base type for content parts in a message payload.</summary>
+public abstract record ResponseMessageContentPart
+{
+    public required string ContentType { get; init; }
+}
+
+public abstract record ResponseMessageTextContentPart : ResponseMessageContentPart
+{
+    public required string Text { get; init; }
+}
+
+public sealed record ResponseMessageInputTextPart : ResponseMessageTextContentPart;
+
+public sealed record ResponseMessageOutputTextPart : ResponseMessageTextContentPart;
+
+public sealed record ResponseMessageInputImagePart : ResponseMessageContentPart
+{
+    public required string ImageUrl { get; init; }
+}
+
+public sealed record UnknownResponseMessageContentPart : ResponseMessageContentPart
+{
+    public required JsonElement Raw { get; init; }
+}
