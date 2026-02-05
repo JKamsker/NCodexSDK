@@ -41,9 +41,9 @@ public sealed record class SessionConfiguredNotification : AppServerNotification
     /// Gets the rollout path for the session.
     /// </summary>
     /// <remarks>
-    /// For ephemeral threads the server may omit this value (wire <c>null</c>). In that case this SDK maps it to an empty string.
+    /// For ephemeral threads the server may omit this value (wire <c>null</c>).
     /// </remarks>
-    public string RolloutPath { get; }
+    public string? RolloutPath { get; }
 
     /// <summary>
     /// Initializes a new instance of <see cref="SessionConfiguredNotification"/>.
@@ -55,7 +55,7 @@ public sealed record class SessionConfiguredNotification : AppServerNotification
         long HistoryLogId,
         int HistoryEntryCount,
         JsonElement? InitialMessages,
-        string RolloutPath,
+        string? RolloutPath,
         JsonElement Params)
         : base("sessionConfigured", Params)
     {

@@ -205,7 +205,7 @@ internal static class AppServerNotificationMapper
                 HistoryLogId: GetInt64(p, "historyLogId"),
                 HistoryEntryCount: GetInt32(p, "historyEntryCount"),
                 InitialMessages: GetOptionalAny(p, "initialMessages"),
-                RolloutPath: GetString(p, "rolloutPath") ?? string.Empty,
+                RolloutPath: GetStringOrNull(p, "rolloutPath"),
                 Params: p),
 
             _ => new UnknownNotification(method, p)
