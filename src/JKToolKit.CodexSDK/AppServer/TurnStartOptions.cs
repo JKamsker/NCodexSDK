@@ -4,11 +4,24 @@ using JKToolKit.CodexSDK.AppServer.Protocol;
 
 namespace JKToolKit.CodexSDK.AppServer;
 
+/// <summary>
+/// Options for starting a new turn on an existing thread.
+/// </summary>
 public sealed class TurnStartOptions
 {
+    /// <summary>
+    /// Gets or sets the input items for the turn.
+    /// </summary>
     public IReadOnlyList<TurnInputItem> Input { get; set; } = Array.Empty<TurnInputItem>();
 
+    /// <summary>
+    /// Gets or sets an optional working directory for the turn.
+    /// </summary>
     public string? Cwd { get; set; }
+
+    /// <summary>
+    /// Gets or sets an optional approval policy.
+    /// </summary>
     public CodexApprovalPolicy? ApprovalPolicy { get; set; }
 
     /// <summary>
@@ -16,7 +29,14 @@ public sealed class TurnStartOptions
     /// </summary>
     public SandboxPolicy? SandboxPolicy { get; set; }
 
+    /// <summary>
+    /// Gets or sets an optional model identifier.
+    /// </summary>
     public CodexModel? Model { get; set; }
+
+    /// <summary>
+    /// Gets or sets an optional reasoning effort.
+    /// </summary>
     public CodexReasoningEffort? Effort { get; set; }
 
     /// <summary>

@@ -13,6 +13,9 @@ using JKToolKit.CodexSDK.Models;
 
 namespace JKToolKit.CodexSDK.AppServer;
 
+/// <summary>
+/// A client for interacting with the Codex CLI "app-server" JSON-RPC interface.
+/// </summary>
 public sealed class CodexAppServerClient : IAsyncDisposable
 {
     private readonly CodexAppServerClientOptions _options;
@@ -46,6 +49,9 @@ public sealed class CodexAppServerClient : IAsyncDisposable
         _rpc.OnServerRequest = OnRpcServerRequestAsync;
     }
 
+    /// <summary>
+    /// Starts a new Codex app-server process and returns a connected client.
+    /// </summary>
     public static async Task<CodexAppServerClient> StartAsync(
         CodexAppServerClientOptions options,
         CancellationToken ct = default)
@@ -87,6 +93,9 @@ public sealed class CodexAppServerClient : IAsyncDisposable
         return launch.WithEnvironment("CODEX_HOME", codexHomeDirectory);
     }
 
+    /// <summary>
+    /// Performs the JSON-RPC initialization handshake.
+    /// </summary>
     public async Task<AppServerInitializeResult> InitializeAsync(
         AppServerClientInfo clientInfo,
         CancellationToken ct = default)
@@ -103,12 +112,21 @@ public sealed class CodexAppServerClient : IAsyncDisposable
         return new AppServerInitializeResult(result);
     }
 
+    /// <summary>
+    /// Sends an arbitrary JSON-RPC request to the app server.
+    /// </summary>
     public Task<JsonElement> CallAsync(string method, object? @params, CancellationToken ct = default) =>
         _rpc.SendRequestAsync(method, @params, ct);
 
+    /// <summary>
+    /// Subscribes to the global app-server notification stream.
+    /// </summary>
     public IAsyncEnumerable<AppServerNotification> Notifications(CancellationToken ct = default) =>
         _globalNotifications.Reader.ReadAllAsync(ct);
 
+    /// <summary>
+    /// Starts a new thread.
+    /// </summary>
     public async Task<CodexThread> StartThreadAsync(ThreadStartOptions options, CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -140,6 +158,9 @@ public sealed class CodexAppServerClient : IAsyncDisposable
         return new CodexThread(threadId, result);
     }
 
+    /// <summary>
+    /// Resumes an existing thread by ID.
+    /// </summary>
     public async Task<CodexThread> ResumeThreadAsync(string threadId, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(threadId))
@@ -154,6 +175,9 @@ public sealed class CodexAppServerClient : IAsyncDisposable
         return new CodexThread(id, result);
     }
 
+    /// <summary>
+    /// Resumes an existing thread using the provided options.
+    /// </summary>
     public async Task<CodexThread> ResumeThreadAsync(ThreadResumeOptions options, CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -183,6 +207,9 @@ public sealed class CodexAppServerClient : IAsyncDisposable
         return new CodexThread(id, result);
     }
 
+    /// <summary>
+    /// Starts a new turn within the specified thread.
+    /// </summary>
     public async Task<CodexTurnHandle> StartTurnAsync(string threadId, TurnStartOptions options, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(threadId))
@@ -332,6 +359,9 @@ public sealed class CodexAppServerClient : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Disposes the underlying app-server connection and terminates the process.
+    /// </summary>
     public async ValueTask DisposeAsync()
     {
         if (Interlocked.Exchange(ref _disposed, 1) != 0)

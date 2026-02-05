@@ -2,16 +2,49 @@ using System.Text.Json;
 
 namespace JKToolKit.CodexSDK.AppServer.Notifications;
 
+/// <summary>
+/// Notification emitted when the server reports the session configuration that applies to a thread.
+/// </summary>
 public sealed record class SessionConfiguredNotification : AppServerNotification
 {
+    /// <summary>
+    /// Gets the session identifier.
+    /// </summary>
     public string SessionId { get; }
+
+    /// <summary>
+    /// Gets the configured model identifier.
+    /// </summary>
     public string Model { get; }
+
+    /// <summary>
+    /// Gets the configured reasoning effort wire value, if present.
+    /// </summary>
     public string? ReasoningEffort { get; }
+
+    /// <summary>
+    /// Gets the history log identifier.
+    /// </summary>
     public long HistoryLogId { get; }
+
+    /// <summary>
+    /// Gets the number of history entries.
+    /// </summary>
     public int HistoryEntryCount { get; }
+
+    /// <summary>
+    /// Gets the initial messages payload, if present.
+    /// </summary>
     public JsonElement? InitialMessages { get; }
+
+    /// <summary>
+    /// Gets the rollout path for the session.
+    /// </summary>
     public string RolloutPath { get; }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="SessionConfiguredNotification"/>.
+    /// </summary>
     public SessionConfiguredNotification(
         string SessionId,
         string Model,
@@ -32,4 +65,3 @@ public sealed record class SessionConfiguredNotification : AppServerNotification
         this.RolloutPath = RolloutPath;
     }
 }
-

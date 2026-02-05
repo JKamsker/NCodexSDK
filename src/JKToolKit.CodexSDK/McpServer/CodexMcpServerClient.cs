@@ -11,6 +11,9 @@ using JKToolKit.CodexSDK.McpServer.Internal;
 
 namespace JKToolKit.CodexSDK.McpServer;
 
+/// <summary>
+/// A client for interacting with the Codex CLI "mcp-server" JSON-RPC interface.
+/// </summary>
 public sealed class CodexMcpServerClient : IAsyncDisposable
 {
     private readonly CodexMcpServerClientOptions _options;
@@ -30,6 +33,9 @@ public sealed class CodexMcpServerClient : IAsyncDisposable
         _rpc.OnServerRequest = OnRpcServerRequestAsync;
     }
 
+    /// <summary>
+    /// Starts a new Codex MCP server process and returns a connected client.
+    /// </summary>
     public static async Task<CodexMcpServerClient> StartAsync(
         CodexMcpServerClientOptions options,
         CancellationToken ct = default)
@@ -67,15 +73,24 @@ public sealed class CodexMcpServerClient : IAsyncDisposable
         return launch.WithEnvironment("CODEX_HOME", codexHomeDirectory);
     }
 
+    /// <summary>
+    /// Sends an arbitrary JSON-RPC request to the MCP server.
+    /// </summary>
     public Task<JsonElement> CallAsync(string method, object? @params, CancellationToken ct = default) =>
         _rpc.SendRequestAsync(method, @params, ct);
 
+    /// <summary>
+    /// Lists tools provided by the MCP server.
+    /// </summary>
     public async Task<IReadOnlyList<McpToolDescriptor>> ListToolsAsync(CancellationToken ct = default)
     {
         var result = await _rpc.SendRequestAsync("tools/list", @params: null, ct);
         return McpToolsListParser.Parse(result);
     }
 
+    /// <summary>
+    /// Calls a tool by name with the provided arguments.
+    /// </summary>
     public async Task<McpToolCallResult> CallToolAsync(string toolName, object arguments, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(toolName))
@@ -91,6 +106,9 @@ public sealed class CodexMcpServerClient : IAsyncDisposable
         return new McpToolCallResult(result);
     }
 
+    /// <summary>
+    /// Starts a new Codex session by invoking the MCP tool that wraps Codex.
+    /// </summary>
     public async Task<CodexMcpSessionStartResult> StartSessionAsync(CodexMcpStartOptions options, CancellationToken ct = default)
     {
         ArgumentNullException.ThrowIfNull(options);
@@ -112,6 +130,9 @@ public sealed class CodexMcpServerClient : IAsyncDisposable
         return new CodexMcpSessionStartResult(parsed.ThreadId, parsed.Text, parsed.StructuredContent, parsed.Raw);
     }
 
+    /// <summary>
+    /// Sends a reply prompt to an existing thread via the MCP tool.
+    /// </summary>
     public async Task<CodexMcpReplyResult> ReplyAsync(string threadId, string prompt, CancellationToken ct = default)
     {
         if (string.IsNullOrWhiteSpace(threadId))
@@ -168,6 +189,9 @@ public sealed class CodexMcpServerClient : IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Disposes the underlying MCP server connection and terminates the process.
+    /// </summary>
     public async ValueTask DisposeAsync()
     {
         if (Interlocked.Exchange(ref _disposed, 1) != 0)

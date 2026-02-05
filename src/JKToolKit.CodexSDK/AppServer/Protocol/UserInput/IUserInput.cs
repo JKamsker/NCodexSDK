@@ -5,6 +5,8 @@ namespace JKToolKit.CodexSDK.AppServer.Protocol;
 /// </summary>
 public interface IUserInput
 {
+    /// <summary>
+    /// Gets the wire discriminator for the user input type.
+    /// </summary>
     string Type { get; }
 }
-

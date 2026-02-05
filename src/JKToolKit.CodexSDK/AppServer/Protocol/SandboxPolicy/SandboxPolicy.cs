@@ -10,7 +10,9 @@ namespace JKToolKit.CodexSDK.AppServer.Protocol;
 /// </remarks>
 public abstract partial record class SandboxPolicy
 {
+    /// <summary>
+    /// Gets the wire discriminator for the sandbox policy type.
+    /// </summary>
     [JsonPropertyName("type")]
     public abstract string Type { get; }
 }
-
