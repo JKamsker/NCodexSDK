@@ -8,7 +8,8 @@ public abstract partial record class SandboxPolicy
     /// Sandbox policy used when the client enforces sandboxing externally.
     /// </summary>
     /// <remarks>
-    /// The <see cref="NetworkAccess"/> value is passed through to the server to describe whether network access is enabled.
+    /// This policy indicates the process is already running inside an external sandbox. Codex treats disk access as unrestricted
+    /// while honoring the declared outbound network access state.
     /// </remarks>
     public sealed record class ExternalSandbox : SandboxPolicy
     {
@@ -16,7 +17,7 @@ public abstract partial record class SandboxPolicy
         public override string Type => "externalSandbox";
 
         /// <summary>
-        /// Gets the network access state (<c>restricted</c> or <c>enabled</c>).
+        /// Gets the outbound network access state (<c>restricted</c> or <c>enabled</c>).
         /// </summary>
         [JsonPropertyName("networkAccess")]
         public required string NetworkAccess { get; init; }

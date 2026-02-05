@@ -1,10 +1,16 @@
 namespace JKToolKit.CodexSDK.Models;
 
 /// <summary>
-/// Represents a Codex sandbox mode identifier.
+/// Represents a Codex sandbox mode identifier (the overall execution restriction level for model-generated commands).
 /// </summary>
 /// <remarks>
 /// This value object is forward-compatible: callers may use any string value supported by their Codex version.
+/// <para>
+/// Known values in Codex include <c>read-only</c>, <c>workspace-write</c>, and <c>danger-full-access</c>.
+/// In <c>workspace-write</c> mode, Codex generally allows writes to the working directory plus some temporary
+/// directories, while keeping safety-sensitive subpaths such as <c>.git</c>, <c>.codex</c>, and <c>.agents</c>
+/// read-only under writable roots.
+/// </para>
 /// </remarks>
 public readonly record struct CodexSandboxMode
 {

@@ -16,7 +16,12 @@ public abstract partial record class SandboxPolicy
         /// Gets the explicit writable root directories.
         /// </summary>
         /// <remarks>
-        /// The server may also add additional writable roots such as the current working directory and temporary directories.
+        /// The server augments this list with default writable roots such as the current working directory, <c>/tmp</c>
+        /// on Unix (unless excluded), and the per-user <c>TMPDIR</c> path (unless excluded).
+        /// <para>
+        /// Even under writable roots, Codex may force some subpaths to remain read-only for safety (for example <c>.git</c>,
+        /// <c>.codex</c>, and <c>.agents</c> under the workspace).
+        /// </para>
         /// </remarks>
         [JsonPropertyName("writableRoots")]
         public IReadOnlyList<string> WritableRoots { get; init; } = Array.Empty<string>();

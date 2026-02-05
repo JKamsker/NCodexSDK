@@ -26,11 +26,17 @@ public sealed class ThreadStartOptions
     /// <summary>
     /// Gets or sets an optional approval policy.
     /// </summary>
+    /// <remarks>
+    /// Known values include <c>untrusted</c>, <c>on-failure</c>, <c>on-request</c>, and <c>never</c>.
+    /// </remarks>
     public CodexApprovalPolicy? ApprovalPolicy { get; set; }
 
     /// <summary>
     /// Gets or sets an optional sandbox mode.
     /// </summary>
+    /// <remarks>
+    /// Known values include <c>read-only</c>, <c>workspace-write</c>, and <c>danger-full-access</c>.
+    /// </remarks>
     public CodexSandboxMode? Sandbox { get; set; }
 
     /// <summary>
@@ -54,13 +60,16 @@ public sealed class ThreadStartOptions
     public string? Personality { get; set; }
 
     /// <summary>
-    /// Gets or sets an optional value indicating whether the thread should be ephemeral.
+    /// Gets or sets an optional value indicating whether the thread should be ephemeral (not persisted on disk).
     /// </summary>
     public bool? Ephemeral { get; set; }
 
     /// <summary>
     /// If true, opt into emitting raw response items on the event stream.
     /// </summary>
+    /// <remarks>
+    /// This is intended for internal use (e.g. Codex Cloud).
+    /// </remarks>
     public bool ExperimentalRawEvents { get; set; }
 }
 

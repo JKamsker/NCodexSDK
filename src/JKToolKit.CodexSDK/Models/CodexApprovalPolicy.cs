@@ -1,10 +1,19 @@
 namespace JKToolKit.CodexSDK.Models;
 
 /// <summary>
-/// Represents a Codex approval policy identifier.
+/// Represents a Codex approval policy identifier (when/how command execution is escalated for user approval).
 /// </summary>
 /// <remarks>
 /// This value object is forward-compatible: callers may use any string value supported by their Codex version.
+/// <para>
+/// Known values in Codex include:
+/// </para>
+/// <list type="bullet">
+/// <item><description><c>untrusted</c>: only "known safe" commands that only read files are auto-approved; everything else prompts for approval.</description></item>
+/// <item><description><c>on-request</c>: the agent decides when to ask for approval.</description></item>
+/// <item><description><c>on-failure</c>: commands run inside the sandbox; failures may be escalated to the user to re-run without sandboxing.</description></item>
+/// <item><description><c>never</c>: never ask the user for approval; failures are returned to the agent and never escalated.</description></item>
+/// </list>
 /// </remarks>
 public readonly record struct CodexApprovalPolicy
 {

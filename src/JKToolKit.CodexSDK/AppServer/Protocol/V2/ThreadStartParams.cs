@@ -27,14 +27,20 @@ public sealed record class ThreadStartParams
     public string? Cwd { get; init; }
 
     /// <summary>
-    /// Gets an optional approval policy wire value.
+    /// Gets an optional approval policy override for the thread (wire value).
     /// </summary>
+    /// <remarks>
+    /// Known values include <c>untrusted</c>, <c>on-failure</c>, <c>on-request</c>, and <c>never</c>.
+    /// </remarks>
     [JsonPropertyName("approvalPolicy")]
     public string? ApprovalPolicy { get; init; }
 
     /// <summary>
-    /// Gets an optional sandbox mode wire value.
+    /// Gets an optional sandbox mode override for the thread (wire value).
     /// </summary>
+    /// <remarks>
+    /// Known values include <c>read-only</c>, <c>workspace-write</c>, and <c>danger-full-access</c>.
+    /// </remarks>
     [JsonPropertyName("sandbox")]
     public string? Sandbox { get; init; }
 
@@ -63,14 +69,17 @@ public sealed record class ThreadStartParams
     public string? Personality { get; init; }
 
     /// <summary>
-    /// Gets an optional value indicating whether the thread should be ephemeral.
+    /// Gets an optional value indicating whether the thread should be ephemeral (not persisted on disk).
     /// </summary>
     [JsonPropertyName("ephemeral")]
     public bool? Ephemeral { get; init; }
 
     /// <summary>
-    /// Gets a value indicating whether to opt into emitting raw response items.
+    /// Gets a value indicating whether to opt into emitting raw response items on the event stream.
     /// </summary>
+    /// <remarks>
+    /// This is intended for internal use (e.g. Codex Cloud).
+    /// </remarks>
     [JsonPropertyName("experimentalRawEvents")]
     public bool ExperimentalRawEvents { get; init; }
 }

@@ -40,6 +40,9 @@ public sealed record class SessionConfiguredNotification : AppServerNotification
     /// <summary>
     /// Gets the rollout path for the session.
     /// </summary>
+    /// <remarks>
+    /// For ephemeral threads the server may omit this value (wire <c>null</c>). In that case this SDK maps it to an empty string.
+    /// </remarks>
     public string RolloutPath { get; }
 
     /// <summary>
