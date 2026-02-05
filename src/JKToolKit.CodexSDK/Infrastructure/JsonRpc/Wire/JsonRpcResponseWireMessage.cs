@@ -1,7 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JKToolKit.CodexSDK.Infrastructure.JsonRpc.Messages;
 
-namespace JKToolKit.CodexSDK.Infrastructure.JsonRpc;
+namespace JKToolKit.CodexSDK.Infrastructure.JsonRpc.Wire;
 
 internal sealed record class JsonRpcResponseWireMessage
 {

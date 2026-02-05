@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace JKToolKit.CodexSDK.Infrastructure.JsonRpc;
+namespace JKToolKit.CodexSDK.Infrastructure.JsonRpc.Messages;
 
 internal sealed record class JsonRpcNotification
 {

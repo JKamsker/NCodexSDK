@@ -1,7 +1,9 @@
 using JKToolKit.CodexSDK.Abstractions;
 using JKToolKit.CodexSDK.AppServer;
+using JKToolKit.CodexSDK.Facade;
 using JKToolKit.CodexSDK.McpServer;
 
+// ReSharper disable once CheckNamespace
 namespace JKToolKit.CodexSDK;
 
 /// <summary>

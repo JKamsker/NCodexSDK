@@ -3,6 +3,7 @@ using JKToolKit.CodexSDK.Exec;
 using JKToolKit.CodexSDK.Exec.Notifications;
 using JKToolKit.CodexSDK.Exec.Protocol;
 using FluentAssertions;
+using JKToolKit.CodexSDK.Facade;
 
 namespace JKToolKit.CodexSDK.Tests.Unit;
 

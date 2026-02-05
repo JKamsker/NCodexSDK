@@ -1,4 +1,4 @@
-namespace JKToolKit.CodexSDK.AppServer.Notifications;
+namespace JKToolKit.CodexSDK.AppServer.Notifications.V2AdditionalNotifications;
 
 /// <summary>
 /// Represents a single plan step entry for a turn.

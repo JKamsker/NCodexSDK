@@ -1,6 +1,6 @@
 using JKToolKit.CodexSDK.McpServer;
 
-namespace JKToolKit.CodexSDK;
+namespace JKToolKit.CodexSDK.Facade;
 
 /// <summary>
 /// Facade for the <c>codex mcp-server</c> mode.

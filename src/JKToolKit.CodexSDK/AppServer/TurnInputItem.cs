@@ -1,3 +1,5 @@
+using JKToolKit.CodexSDK.AppServer.Protocol.UserInput;
+
 namespace JKToolKit.CodexSDK.AppServer;
 
 using JKToolKit.CodexSDK.AppServer.Protocol;

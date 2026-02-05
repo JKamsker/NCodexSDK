@@ -1,4 +1,5 @@
 using FluentAssertions;
+using JKToolKit.CodexSDK.Facade;
 
 namespace JKToolKit.CodexSDK.Tests.Unit;
 

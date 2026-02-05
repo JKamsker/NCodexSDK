@@ -1,12 +1,12 @@
 using JKToolKit.CodexSDK.AppServer;
+using JKToolKit.CodexSDK.Exec;
 using JKToolKit.CodexSDK.Infrastructure;
 using JKToolKit.CodexSDK.McpServer;
-using JKToolKit.CodexSDK.Exec;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 
-namespace JKToolKit.CodexSDK;
+namespace JKToolKit.CodexSDK.Facade;
 
 /// <summary>
 /// Builder for creating a <see cref="CodexSdk"/> without using dependency injection.

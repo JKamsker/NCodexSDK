@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace JKToolKit.CodexSDK.AppServer.Notifications;
+namespace JKToolKit.CodexSDK.AppServer.Notifications.V2AdditionalNotifications;
 
 /// <summary>
 /// Notification emitted when token usage information is updated for a thread/turn.

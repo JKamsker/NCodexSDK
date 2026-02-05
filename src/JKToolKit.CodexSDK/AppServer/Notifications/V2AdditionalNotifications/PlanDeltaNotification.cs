@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace JKToolKit.CodexSDK.AppServer.Notifications;
+namespace JKToolKit.CodexSDK.AppServer.Notifications.V2AdditionalNotifications;
 
 /// <summary>
 /// Notification emitted when a <c>plan</c> item streams additional text (experimental).

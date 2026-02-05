@@ -1,6 +1,7 @@
 using JKToolKit.CodexSDK.AppServer;
 using JKToolKit.CodexSDK.McpServer;
 using FluentAssertions;
+using JKToolKit.CodexSDK.Facade;
 
 namespace JKToolKit.CodexSDK.Tests.Unit;
 

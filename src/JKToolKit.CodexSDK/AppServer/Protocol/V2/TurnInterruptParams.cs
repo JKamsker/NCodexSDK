@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace JKToolKit.CodexSDK.AppServer.Protocol;
+namespace JKToolKit.CodexSDK.AppServer.Protocol.V2;
 
 /// <summary>
 /// Wire parameters for the <c>turn/interrupt</c> request (v2 protocol).

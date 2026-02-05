@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace JKToolKit.CodexSDK.AppServer.Protocol;
+namespace JKToolKit.CodexSDK.AppServer.Protocol.SandboxPolicy;
 
 /// <summary>
 /// Sandbox policy overrides used by <c>turn/start</c>.

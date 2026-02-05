@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace JKToolKit.CodexSDK.AppServer.Protocol;
+namespace JKToolKit.CodexSDK.AppServer.Protocol.UserInput;
 
 /// <summary>
 /// Represents an image-by-URL user input item in the app-server wire format.

@@ -1,6 +1,7 @@
 using System.Text.Json;
 using JKToolKit.CodexSDK.Models;
 using JKToolKit.CodexSDK.AppServer.Protocol;
+using JKToolKit.CodexSDK.AppServer.Protocol.SandboxPolicy;
 
 namespace JKToolKit.CodexSDK.AppServer;
 

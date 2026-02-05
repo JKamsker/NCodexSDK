@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Threading.Channels;
+using JKToolKit.CodexSDK.Infrastructure.JsonRpc.Messages;
+using JKToolKit.CodexSDK.Infrastructure.JsonRpc.Wire;
 using Microsoft.Extensions.Logging;
 
 namespace JKToolKit.CodexSDK.Infrastructure.JsonRpc;

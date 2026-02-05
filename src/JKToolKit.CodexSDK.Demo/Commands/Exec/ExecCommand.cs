@@ -3,6 +3,7 @@ using JKToolKit.CodexSDK;
 using JKToolKit.CodexSDK.Exec;
 using JKToolKit.CodexSDK.Exec.Notifications;
 using JKToolKit.CodexSDK.Exec.Protocol;
+using JKToolKit.CodexSDK.Facade;
 using JKToolKit.CodexSDK.Models;
 using Microsoft.Extensions.Logging;
 using Spectre.Console.Cli;

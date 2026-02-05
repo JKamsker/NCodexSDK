@@ -1,4 +1,4 @@
-namespace JKToolKit.CodexSDK.AppServer.Protocol;
+namespace JKToolKit.CodexSDK.AppServer.Protocol.UserInput;
 
 /// <summary>
 /// V2 <c>UserInput</c> DTO used by <c>turn/start</c>.

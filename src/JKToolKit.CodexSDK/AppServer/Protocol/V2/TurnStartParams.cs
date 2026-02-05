@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace JKToolKit.CodexSDK.AppServer.Protocol;
+namespace JKToolKit.CodexSDK.AppServer.Protocol.V2;
 
 /// <summary>
 /// Wire parameters for the <c>turn/start</c> request (v2 protocol).
@@ -44,7 +44,7 @@ public sealed record class TurnStartParams
     /// Gets an optional sandbox policy override for this turn and subsequent turns.
     /// </summary>
     [JsonPropertyName("sandboxPolicy")]
-    public SandboxPolicy? SandboxPolicy { get; init; }
+    public SandboxPolicy.SandboxPolicy? SandboxPolicy { get; init; }
 
     /// <summary>
     /// Gets an optional model override for this turn and subsequent turns.

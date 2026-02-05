@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace JKToolKit.CodexSDK.AppServer.Notifications;
+namespace JKToolKit.CodexSDK.AppServer.Notifications.V2AdditionalNotifications;
 
 /// <summary>
 /// Notification emitted to inform clients about deprecated behavior or upcoming changes.

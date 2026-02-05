@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace JKToolKit.CodexSDK.AppServer.Protocol;
+namespace JKToolKit.CodexSDK.AppServer.Protocol.Initialize;
 
 /// <summary>
 /// Client-declared capabilities negotiated during initialize.

@@ -1,6 +1,6 @@
 using JKToolKit.CodexSDK.AppServer;
 
-namespace JKToolKit.CodexSDK;
+namespace JKToolKit.CodexSDK.Facade;
 
 /// <summary>
 /// Facade for the <c>codex app-server</c> mode.

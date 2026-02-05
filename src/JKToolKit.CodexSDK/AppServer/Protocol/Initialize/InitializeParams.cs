@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
-using JKToolKit.CodexSDK.AppServer;
 
-namespace JKToolKit.CodexSDK.AppServer.Protocol;
+namespace JKToolKit.CodexSDK.AppServer.Protocol.Initialize;
 
 /// <summary>
 /// Wire parameters for the <c>initialize</c> request.

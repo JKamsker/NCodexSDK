@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace JKToolKit.CodexSDK.Infrastructure.JsonRpc;
+namespace JKToolKit.CodexSDK.Infrastructure.JsonRpc.Wire;
 
 internal sealed record class JsonRpcRequestWireMessage
 {

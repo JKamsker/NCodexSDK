@@ -2,7 +2,7 @@ using JKToolKit.CodexSDK.Abstractions;
 using JKToolKit.CodexSDK.Exec;
 using JKToolKit.CodexSDK.Exec.Protocol;
 
-namespace JKToolKit.CodexSDK;
+namespace JKToolKit.CodexSDK.Facade;
 
 /// <summary>
 /// Facade for the <c>codex exec</c> mode.

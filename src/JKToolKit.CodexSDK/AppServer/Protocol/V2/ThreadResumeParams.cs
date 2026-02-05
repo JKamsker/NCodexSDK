@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace JKToolKit.CodexSDK.AppServer.Protocol;
+namespace JKToolKit.CodexSDK.AppServer.Protocol.V2;
 
 /// <summary>
 /// Wire parameters for the <c>thread/resume</c> request (v2 protocol).

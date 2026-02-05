@@ -6,6 +6,7 @@ using JKToolKit.CodexSDK.Infrastructure;
 using JKToolKit.CodexSDK.Infrastructure.JsonRpc;
 using JKToolKit.CodexSDK.Infrastructure.Stdio;
 using JKToolKit.CodexSDK.Exec;
+using JKToolKit.CodexSDK.Infrastructure.JsonRpc.Messages;
 using JKToolKit.CodexSDK.Models;
 using JKToolKit.CodexSDK.McpServer.Internal;
 

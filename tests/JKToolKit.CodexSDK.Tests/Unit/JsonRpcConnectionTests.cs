@@ -3,6 +3,7 @@ using System.Text.Json;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using JKToolKit.CodexSDK.Infrastructure.JsonRpc;
+using JKToolKit.CodexSDK.Infrastructure.JsonRpc.Messages;
 
 namespace JKToolKit.CodexSDK.Tests.Unit;
 

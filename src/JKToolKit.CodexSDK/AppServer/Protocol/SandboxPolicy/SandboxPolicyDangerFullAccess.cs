@@ -1,4 +1,4 @@
-namespace JKToolKit.CodexSDK.AppServer.Protocol;
+namespace JKToolKit.CodexSDK.AppServer.Protocol.SandboxPolicy;
 
 public abstract partial record class SandboxPolicy
 {
